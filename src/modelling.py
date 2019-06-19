@@ -4,7 +4,7 @@ from sklearn.svm import SVR
 from sklearn.linear_model import BayesianRidge, LinearRegression, ElasticNetCV, LassoCV
 from sklearn.ensemble import RandomForestRegressor
 
-def train_predict(X_train, y_train, X_test, method='SVM'):
+def train_predict(X_train, y_train, X_val, method='SVM'):
     
     # Create model
     print('[INFO] Initializing model...')
@@ -31,7 +31,7 @@ def train_predict(X_train, y_train, X_test, method='SVM'):
     
     # Predict
     print('[INFO] Predict new values...')
-    predicted = model.predict(X_test)
+    predicted = model.predict(X_val)
 
     return predicted
 

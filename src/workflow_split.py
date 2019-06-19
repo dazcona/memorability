@@ -31,7 +31,7 @@ X_train, X_val, y_train, y_val = train_test_split(
 
 ## CAPTIONS
 
-from processing import fit_and_transform_text
+from tfidf import fit_and_transform_text
 
 print('[INFO] Processing the captions and transforming them into numbers...')
 X_train_tfidf, X_val_tfidf = fit_and_transform_text(X_train['caption'], X_val['caption'])

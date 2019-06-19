@@ -12,8 +12,6 @@ def fit_and_transform_text(train_docs, test_docs):
     
     # Fit and transform the counts 
     train_doc_counts = count_vect.fit_transform(train_docs)
-    # count_vect.vocabulary_
-    # count_vect.vocabulary_.get(u'heavy')
 
     # print('[INFO] Vocabulary...')
     # print(count_vect.vocabulary_)

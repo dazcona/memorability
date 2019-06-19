@@ -1,5 +1,6 @@
 # imports
 import os
+import numpy as np
 import pandas as pd
 import config
 
@@ -118,6 +119,20 @@ def read_file_contents(filename, feature_name):
 #             return { '{}_{}'.format(feature_name, i + 1) : float(feature) for i, feature in enumerate(f.read().split(',')) }
 #         elif feature_name == 'HMP':
 #             return { '{}_{}'.format(feature_name, i + 1) : float(feature.split(':')[1]) for i, feature in enumerate(f.read().split()) }
+
+
+def load_pretrained_word_vectors():
+    """ Load pre-trained GLoVe vectors """
+
+    print('[INFO] Loading word vectors...')
+    embeddings_index = {}
+    with open(config.GLOVE_FILE) as f:
+        for line in f:
+            word, coefs = line.split(maxsplit=1)
+            coefs = np.fromstring(coefs, 'f', sep=' ')
+            embeddings_index[word] = coefs
+    print('[INFO] Found {:,} word vectors.'.format(len(embeddings_index)))
+    return embeddings_index
 
 
 if __name__ == "__main__":
