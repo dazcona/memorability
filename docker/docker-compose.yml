@@ -46,8 +46,8 @@ services:
     container_name: tensorboard
     working_dir: /logs
     ports:
-     - "6007:6007"
+     - "6006:6006"
     volumes:
       - ../logs:/logs
     # runtime: nvidia
-    command: tensorboard --logdir /logs --port=6007
+    command: tensorboard --logdir /logs # --port=6007
