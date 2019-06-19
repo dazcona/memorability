@@ -20,7 +20,7 @@ services:
       
 # Setup the ports you want to expose:
     ports:
-    # Jupyter port
+      # Jupyter port
       - "8888:8888"
 
 # Setup the volumes you want to share:    
@@ -33,7 +33,7 @@ services:
       #- /tmp/.X11-unix:/tmp/.X11-unix
 
 # Uncomment the following line to use an NVIDIA GPU (requires nvidia-docker)
-    #runtime: nvidia
+    # runtime: nvidia
 
 # By default this container stay alive without running any command 
     command: tail /dev/null -f
@@ -41,13 +41,13 @@ services:
     #command: jupyter notebook --allow-root --ip=0.0.0.0
 
 # Start a Tensorboard on localhost:6006 that process the logs folder
-  # tensorboard:
-  #   image: tensorflow/tensorflow:latest-cpu
-  #   container_name: tensorboard
-  #   working_dir: /logs
-  #   ports:
-  #    - "6006:6006"
-  #   volumes:
-  #     - ../logs:/logs
-  #   runtime: nvidia
-  #   command: tensorboard --logdir /logs
+  tensorboard:
+    image: tensorflow/tensorflow
+    container_name: tensorboard
+    working_dir: /logs
+    ports:
+     - "6007:6007"
+    volumes:
+      - ../logs:/logs
+    # runtime: nvidia
+    command: tensorboard --logdir /logs --port=6007

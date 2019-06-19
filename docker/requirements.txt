@@ -24,9 +24,9 @@ pillow
 
 ## Deep learning packages:
 
-#keras
+keras
 #torchvision
-#tensorflow
+tensorflow
 #tensorflow-gpu
 #tensorboard
 #Theano
