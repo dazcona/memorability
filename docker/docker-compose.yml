@@ -33,7 +33,7 @@ services:
       #- /tmp/.X11-unix:/tmp/.X11-unix
 
 # Uncomment the following line to use an NVIDIA GPU (requires nvidia-docker)
-    # runtime: nvidia
+    runtime: nvidia
 
 # By default this container stay alive without running any command 
     command: tail /dev/null -f
@@ -49,5 +49,4 @@ services:
      - "6006:6006"
     volumes:
       - ../logs:/logs
-    # runtime: nvidia
     command: tensorboard --logdir /logs # --port=6007
