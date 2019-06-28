@@ -5,14 +5,14 @@ services:
   my_container:
     image: my_image
     container_name: my_container
-    working_dir: /data
+    working_dir: /code
     build:
       context: ../
       dockerfile: docker/Dockerfile
 
 # Setup environment variables:
     environment:
-      - PYTHONPATH=/data
+      - PYTHONPATH=/code
       # Uncomment the following line to plot images on Linux
       #- DISPLAY=unix$DISPLAY
       # Set a password to your Jupyter Notebook
@@ -23,10 +23,10 @@ services:
       # Jupyter port
       - "8888:8888"
 
-# Setup the volumes you want to share:    
+# Setup the volumes you want to share:
     volumes:
-      - ../:/data
-      - /Volumes/Samsung_T5/Memorability/data/raw/Memorability 2018/:/datasets
+      - ../:/code
+      - /media/enric/DavidHDD/datasets/memorability/campus.pub.ro/:/datasets
       #Share the webcam with the container
       #- /dev/video0:/dev/video0
       # Uncomment the following line to plot images on Linux

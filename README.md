@@ -29,16 +29,20 @@ These videos come with a set of pre-extracted features, such as: Dense SIFT, HoG
 
 ## Deployment
 
-1. Download the dataset (in an external drive)
-   
+1. Download the dataset (you may want to use an external drive) - https://stackoverflow.com/questions/113886/how-to-recursively-download-a-folder-via-ftp-on-linux
+```
+$ wget -m --ftp-user="<user>" --ftp-password=<password> ftp://<ftp server>
+```
+
 2. Mount the dataset as drive in */datasets* in *docker-compose.yml*. As an example:
 ```
 volumes:
-  - /Volumes/Samsung_T5/Memorability/data/raw/Memorability 2018/:/datasets
+  - /Volumes/HDD/datasets/:/datasets
 ```
 
 3. Build the docker image:
 ```
+$ cd docker
 $ make build
 ```
 
