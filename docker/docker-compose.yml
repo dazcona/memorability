@@ -26,7 +26,7 @@ services:
 # Setup the volumes you want to share:
     volumes:
       - ../:/code
-      - /media/enric/DavidHDD/datasets/memorability/campus.pub.ro/:/datasets
+      - /media/DavidHDD/memorability/campus.pub.ro/:/datasets
       #Share the webcam with the container
       #- /dev/video0:/dev/video0
       # Uncomment the following line to plot images on Linux

@@ -42,12 +42,12 @@ RUN_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, RUN_NAME)
 DATA_DIR = '/datasets' # '/Volumes/Samsung_T5/Memorability/data/raw/Memorability 2018/' mounted as datasets in docker-compose.yml
 
 # DEV
-DEV_DIR = os.path.join(DATA_DIR, 'dev-set')
+DEV_DIR = os.path.join(DATA_DIR, 'devset', 'dev-set')
 DEV_GROUNDTRUTH = os.path.join(DEV_DIR, 'ground-truth', 'ground-truth_dev-set.csv')
 
 # CAPTIONS
 DEV_CAPTIONS = os.path.join(DEV_DIR, 'dev-set_video-captions.txt')
-DEV_CAPTIONS_2 = os.path.join(DEV_DIR, 'dev-set_video-captions2.txt')
+# DEV_CAPTIONS_2 = os.path.join(DEV_DIR, 'dev-set_video-captions2.txt')
 
 # EMBEDDINGS
 GLOVE_FILE = os.path.join('data', 'glove.6B.300d.txt')
@@ -67,10 +67,10 @@ HOG_DIM = 'variable'
 
 # SOURCES
 DEV_SOURCES = os.path.join(DEV_DIR, 'sources') # 8,000 videos
-DEV_SOURCES_2 = os.path.join(DEV_DIR, 'sources2') # 6,000 videos
+# DEV_SOURCES_2 = os.path.join(DEV_DIR, 'sources2') # 6,000 videos
 
 # TEST
-TEST_DIR = os.path.join(DATA_DIR, 'test-set')
+TEST_DIR = os.path.join(DATA_DIR, 'testset', 'me19me-testset')
 TEST_FEATURES = os.path.join(TEST_DIR, 'features')
 TEST_FEATURES_LIST = ['C3D', 'HMP', 'InceptionV3', 'LBP', 'Aesthetics', 'ColorHistogram', 'HOG', 'ORB']
 TEST_CAPTIONS = os.path.join(TEST_DIR, 'test-set_video-captions.txt')

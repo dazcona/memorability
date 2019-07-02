@@ -29,9 +29,14 @@ These videos come with a set of pre-extracted features, such as: Dense SIFT, HoG
 
 ## Deployment
 
-1. Download the dataset (you may want to use an external drive) - https://stackoverflow.com/questions/113886/how-to-recursively-download-a-folder-via-ftp-on-linux
+1. Download the dataset (you may want to use an external drive) via FTP like [here](https://stackoverflow.com/questions/113886/how-to-recursively-download-a-folder-via-ftp-on-linux):
 ```
 $ wget -m --ftp-user="<user>" --ftp-password=<password> ftp://<ftp server>
+```
+and unzip multi-part files like [here](http://koenaerts.ca/unzip-multi-part-archives-in-linux/):
+```
+$ zip --fix me18me-devset.zip --output mybigzipfile.zip
+$ unzip mybigzipfile.zip
 ```
 
 2. Mount the dataset as drive in */datasets* in *docker-compose.yml*. As an example:
