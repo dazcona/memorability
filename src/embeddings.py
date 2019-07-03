@@ -84,7 +84,7 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
 
     print('[INFO] Fitting model...')
     tensorboard = TensorBoard(log_dir=config.RUN_LOG_DIR)
-    checkpoints = ModelCheckpoint(os.path.join(config.RUN_CHECKPOINT_DIR, 'weights.fold_{}.{epoch:02d}-{val_loss:.2f}.hdf5'.format(fold)),
+    checkpoints = ModelCheckpoint(os.path.join(config.RUN_CHECKPOINT_DIR, 'weights.{epoch:02d}-{val_loss:.2f}.hdf5'),
         monitor='mean_squared_error', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
     H = model.fit(X_train, y_train,
         validation_data=(X_val, y_val),
