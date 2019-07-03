@@ -83,7 +83,7 @@ for train_index, val_index in kf.split(X):
             if feature_name == 'CAPTIONS' and config.CAPTIONS_ALGORITHM == 'EMBEDDINGS':
 
                 print('[INFO] Processing Embeddings...')
-                predictions_features = train_embeddings_network(X_train['caption'], y_train, X_val['caption'], y_val, word_vectors)
+                predictions_features = train_embeddings_network(X_train['caption'], y_train, X_val['caption'], y_val, word_vectors, k + 1)
                 predictions.append(predictions_features)
 
             ## TRADITIONAL MACHINE LEARNING

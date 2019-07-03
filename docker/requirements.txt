@@ -26,8 +26,8 @@ pillow
 
 keras
 #torchvision
-tensorflow
-#tensorflow-gpu
+#tensorflow
+tensorflow-gpu
 #tensorboard
 #Theano
 #fastai
