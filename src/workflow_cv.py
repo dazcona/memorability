@@ -63,7 +63,7 @@ scores = []
 
 for train_index, val_index in kf.split(X):
 
-    fold = fold
+    fold = k + 1
 
     ## SPLIT
 
