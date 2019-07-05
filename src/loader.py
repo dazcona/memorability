@@ -17,7 +17,7 @@ def data_load(FEATURES_DICT):
 
         print('[INFO] Loading captions data...')
         # Load captions
-        dev_captions = pd.read_csv(config.DEV_CAPTIONS, sep = '\t', header=None, names=['video', 'caption'] )
+        dev_captions = pd.read_csv(config.DEV_CAPTIONS, sep='\t', header=None, names=['video', 'caption'] )
         # Fix captions
         dev_captions["caption"] = dev_captions["caption"].str.split('-').apply(' '.join)
         # Merge captions

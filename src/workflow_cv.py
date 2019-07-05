@@ -34,9 +34,9 @@ ALGORITHM: {} (if pre-computed features are used)
 NFOLDS: {}""".format(config.TARGET, 
     ','.join([ feature for feature, added in config.FEATURES_DICT.items() if added ]), 
     ','.join([ '{} ({:.0%})'.format(feature, weight) for feature, weight in config.FEATURES_WEIGHTS.items() if weight > 0 ]), 
-    config.CAPTIONS_ALGORITHM, 
+    config.CAPTIONS_ALGORITHM,
     config.NUM_EPOCHS,
-    config.ALGORITHM, 
+    config.ALGORITHM,
     config.NFOLDS), file=f)
 
 ## LOAD DATA
@@ -63,12 +63,16 @@ scores = []
 
 for train_index, val_index in kf.split(X):
 
+    fold = fold
+
     ## SPLIT
 
-    print('[INFO] {}. Cross-Validation fold: {}'.format(k + 1, k + 1))
+    print('[INFO] {}. Cross-Validation fold: {}'.format(fold, fold))
 
     X_train, X_val = X.iloc[train_index, :], X.iloc[val_index, :]
     y_train, y_val = Y.iloc[train_index], Y.iloc[val_index]
+
+    os.mkdir(config.RUN_LOG_FOLD_DIR.format(fold))
 
     predictions = []
 
@@ -83,7 +87,7 @@ for train_index, val_index in kf.split(X):
             if feature_name == 'CAPTIONS' and config.CAPTIONS_ALGORITHM == 'EMBEDDINGS':
 
                 print('[INFO] Processing Embeddings...')
-                predictions_features = train_embeddings_network(X_train['caption'], y_train, X_val['caption'], y_val, word_vectors, k + 1)
+                predictions_features = train_embeddings_network(X_train['caption'], y_train, X_val['caption'], y_val, word_vectors, fold)
                 predictions.append(predictions_features)
 
             ## TRADITIONAL MACHINE LEARNING
@@ -119,7 +123,7 @@ for train_index, val_index in kf.split(X):
     scores.append(corr_coefficient)
 
     with open(MAIN_LOG, 'a') as f:
-        print("""FOLD {} Cross-Validation. Spearman Correlation Coefficient: {:.4f} (p-value {:.4f})""".format(k + 1, corr_coefficient, p_value), file=f)
+        print("""FOLD {} Cross-Validation. Spearman Correlation Coefficient: {:.4f} (p-value {:.4f})""".format(fold, corr_coefficient, p_value), file=f)
 
     ## NEXT
 

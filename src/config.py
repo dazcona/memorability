@@ -35,6 +35,7 @@ current_dir_path = os.path.dirname(os.path.realpath(__file__))
 RUN_NAME = datetime.datetime.now().strftime('run-%Y-%m-%d_%H-%M-%S')
 LOG_DIR = os.path.join(current_dir_path, '..', 'logs')
 RUN_LOG_DIR = os.path.join(LOG_DIR, RUN_NAME)
+RUN_LOG_FOLD_DIR = os.path.join(RUN_LOG_DIR, 'fold_{}')
 CHECKPOINT_DIR = os.path.join(current_dir_path, '..', 'checkpoints')
 RUN_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, RUN_NAME)
 
