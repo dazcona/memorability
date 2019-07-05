@@ -89,7 +89,7 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
     checkpoints = ModelCheckpoint(
         os.path.join(
             config.RUN_CHECKPOINT_DIR,
-            'weights.fold_' + str(k + 1) + '.{epoch:02d}-{val_loss:.2f}.hdf5'),
+            'weights.fold_' + str(fold) + '.{epoch:02d}-{val_loss:.2f}.hdf5'),
         monitor='mean_squared_error', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
     H = model.fit(X_train, y_train,
         validation_data=(X_val, y_val),
