@@ -10,7 +10,7 @@ from keras.models import Model
 from keras.optimizers import Adam
 from keras.callbacks import TensorBoard, ModelCheckpoint
 import matplotlib.pyplot as plt
-from scipy.stats import spearmanr
+# import keras.backend as K
 
 
 def train_embeddings_network(train_captions, y_train, validation_captions, y_val, embeddings_index, fold):
@@ -20,6 +20,8 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
     train_captions = train_captions.tolist()
     caption_words = list(set([ word for caption in train_captions for word in caption.split() ]))
     print('[INFO] {:,} words in the dev captions'.format(len(caption_words)))
+
+    # VECTORIZATION
 
     print('[INFO] Vectorize the captions into a 2D integer tensor...')
     # Tokenizer
@@ -49,6 +51,8 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
             embedding_matrix[i] = embedding_vector
     print('[INFO] Embedding Matrix\'s shape is {}'.format(embedding_matrix.shape))
 
+    # MODEL
+
     # load pre-trained word embeddings into an Embedding layer
     # note that we set trainable = False so as to keep the embeddings fixed
     embedding_layer = Embedding(num_words,
@@ -67,55 +71,81 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
     print('[INFO] Model\'s Summary')
     print(model.summary())
 
+    # COMPILE
+
     print('[INFO] Compiling model...')
+    
     # Optimizer
     opt = Adam(lr=1e-3, decay=1e-3 / 200)
-    # Compile
+
     model.compile(
         loss='mean_squared_error',
-        optimizer=opt, 
-        metrics=['mean_squared_error']
+        optimizer=opt,
+        metrics=['mse', 'mae', 'mape', 'cosine'],
     )
 
-    print('[INFO] Preprocessing validation captions...')
     # X and Y TEST
+    print('[INFO] Preprocessing validation captions...')
     validation_captions = validation_captions.tolist()
     validation_sequences = tokenizer.texts_to_sequences(validation_captions)
     X_val = pad_sequences(validation_sequences, maxlen=MAX_SEQUENCE_LENGTH)
     y_val = np.array(y_val)
 
+    # FIT
+
     print('[INFO] Fitting model...')
     tensorboard = TensorBoard(log_dir=config.RUN_LOG_FOLD_DIR.format(fold)) # config.RUN_LOG_DIR
-    checkpoints = ModelCheckpoint(
-        os.path.join(
-            config.RUN_CHECKPOINT_DIR,
-            'weights.fold_' + str(fold) + '.{epoch:02d}-{val_loss:.2f}.hdf5'),
-        monitor='mean_squared_error', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
+    #checkpoints = ModelCheckpoint(
+    #    os.path.join(
+    #        config.RUN_CHECKPOINT_DIR,
+    #        'weights.fold_' + str(fold) + '.{epoch:02d}-{val_loss:.2f}.hdf5'),
+    #    monitor='mean_squared_error', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
     H = model.fit(X_train, y_train,
         validation_data=(X_val, y_val),
         epochs=config.NUM_EPOCHS, 
         shuffle=False,
         callbacks=[
             tensorboard,
-            checkpoints,
+            # checkpoints,
             ]
     )
 
-    # plot the training loss and accuracy
+    # PLOT TRAINING LOSS vs ACCURACY
+
     plt.style.use("ggplot")
     plt.figure()
     plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["loss"], label="train_loss")
     plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_loss"], label="val_loss")
-    plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["mean_squared_error"], label="train_MSE")
-    plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_mean_squared_error"], label="val_MSE")
+    # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["mean_squared_error"], label="train_MSE")
+    # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_mean_squared_error"], label="val_MSE")
+    plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["mean_absolute_error"], label="train_MAE")
+    plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_mean_absolute_error"], label="val_MAE")
+    # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["mean_absolute_percentage_error"], label="train_MAPE")
+    # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_mean_absolute_percentage_error"], label="val_MAPE")
+    # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["cosine_proximity"], label="train_cosine_prox")
+    # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_cosine_proximity"], label="val_cosine_prox")
     plt.title("Training Loss and MSE")
     plt.xlabel("Epoch #")
     plt.ylabel("Loss/MSE")
     plt.legend()
-    plt.savefig('figures/{}_fold_{}_loss_vs_MSE.png'.format(config.RUN_NAME, fold))
+    plt.savefig('{}/embeddings_loss_vs_MSE.png'.format(config.RUN_LOG_FOLD_DIR.format(fold)))
 
     print('[INFO] Predicting values...')
     predicted = model.predict(X_val)
+
+    ## PLOT EVALUATION
+
+    print('[INFO] Plotting true values vs predicted values...')
+    font = { 'family': 'DejaVu Sans', 'weight': 'bold', 'size': 15 }
+    plt.rc('font', **font)
+    plt.figure(figsize=(12, 10), dpi=100)
+    plt.scatter(y_val, predicted, c="b", alpha=0.25)
+    plt.title("True values vs Predicted values")
+    plt.xlabel("True values")
+    plt.ylabel("Predicted values")
+    plt.savefig('{}/true_vs_predicted.png'.format(config.RUN_LOG_FOLD_DIR.format(fold)))
+
+    # return predictions
 
     return predicted
     
