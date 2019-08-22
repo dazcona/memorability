@@ -9,43 +9,43 @@ pandas
 scikit-learn
 matplotlib
 seaborn
-#pyspark
+# pyspark
 
 
 ## Computer vision:
 
 opencv-python
 pillow
-#scikit-image
-#imageio
-#ffmpeg
-#moviepy
+# scikit-image
+# imageio
+# ffmpeg
+# moviepy
 
 
 ## Deep learning packages:
 
 keras
-#torchvision
-#tensorflow
+# torchvision
+# tensorflow
 tensorflow-gpu
-#tensorboard
-#Theano
-#fastai
-#Lasagne
-#tflearn
-#h5py
+# tensorboard
+# Theano
+# fastai
+# Lasagne
+# tflearn
+# h5py
 
 
 ## Other popular packages:
 
-#requests
-#ipython
-#Scrapy
-#nose
+# requests
+# ipython
+# Scrapy
+# nose
 jupyter
-#Flask
-#setuptools 
-#cmake
+# Flask
+# setuptools 
+# cmake
 
 ## Utils:
 
