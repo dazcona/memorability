@@ -71,8 +71,10 @@ $ python src/workflow_cv.py
 * MediaEval 2018: http://multimediaeval.org/mediaeval2018/memorability/index.html
 * MediaEval 2018: Predicting Media Memorability: https://www.slideshare.net/multimediaeval/mediaeval-2018-predicting-media-memorability
 * Proceedings of the MediaEval 2018 Workshop: http://ceur-ws.org/Vol-2283/
-* https://www.pyimagesearch.com/2019/01/21/regression-with-keras/
+* Keras & Regression: https://www.pyimagesearch.com/2019/01/21/regression-with-keras/
+* GloVe: https://nlp.stanford.edu/projects/glove/
+* Pre-trained word embeddings: https://github.com/keras-team/keras/blob/master/examples/pretrained_word_embeddings.py
 * https://blog.keras.io/using-pre-trained-word-embeddings-in-a-keras-model.html
 * https://towardsdatascience.com/machine-learning-word-embedding-sentiment-classification-using-keras-b83c28087456
-* https://nlp.stanford.edu/projects/glove/
-* https://github.com/keras-team/keras/blob/master/examples/pretrained_word_embeddings.py
+* Keras custom metrics: https://machinelearningmastery.com/custom-metrics-deep-learning-keras-python/
+* How to Train a Final Machine Learning Model: https://machinelearningmastery.com/train-final-machine-learning-model/
