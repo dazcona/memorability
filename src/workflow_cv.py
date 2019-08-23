@@ -125,7 +125,12 @@ for train_index, val_index in kf.split(X):
     with open(MAIN_LOG, 'a') as f:
         print("""FOLD {} Cross-Validation. Spearman Correlation Coefficient: {:.4f} (p-value {:.4f})""".format(fold, corr_coefficient, p_value), file=f)
 
-    ## NEXT
+    ## NEXT FOLD
+
+    if config.ONLY_RUN_ONE_FOLD_CV:
+        with open(MAIN_LOG, 'a') as f:
+            print("""*************** EARLY EXIT: ONLY_RUN_ONE_FOLD_CV IS ENABLED IN CONFIG FILE ***************""", file=f)
+        break
 
     k += 1
 

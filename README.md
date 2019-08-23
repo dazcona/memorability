@@ -61,7 +61,12 @@ $ make run
 $ make dev
 ```
 
-6. Run the code:
+6. Extract frames from videos:
+```
+$ python src/extract_frames.py
+```
+
+6. Run the training:
 ```
 $ python src/workflow_cv.py
 ```

@@ -70,9 +70,17 @@ HOG_DIM = 'variable'
 DEV_SOURCES = os.path.join(DEV_DIR, 'sources') # 8,000 videos
 # DEV_SOURCES_2 = os.path.join(DEV_DIR, 'sources2') # 6,000 videos
 
+# FRAMES
+DEV_FRAMES = os.path.join(DEV_DIR, 'frames')
+
 # TEST
-TEST_DIR = os.path.join(DATA_DIR, 'testset', 'me19me-testset')
+TEST_GROUNDTRUTH = os.path.join(DATA_DIR, 'testset', 'test-set_list.txt')
+TEST_DIR = os.path.join(DATA_DIR, 'testset', 'me19me-testset', 'test-set')
+TEST_CAPTIONS = os.path.join(TEST_DIR, 'test-set_video-captions.txt')
 TEST_FEATURES = os.path.join(TEST_DIR, 'features')
 TEST_FEATURES_LIST = ['C3D', 'HMP', 'InceptionV3', 'LBP', 'Aesthetics', 'ColorHistogram', 'HOG', 'ORB']
-TEST_CAPTIONS = os.path.join(TEST_DIR, 'test-set_video-captions.txt')
 TEST_SOURCES = os.path.join(TEST_DIR, 'sources') # 2,000 videos
+TEST_FRAMES = os.path.join(TEST_DIR, 'frames')
+
+# ONLY RUN ONCE
+ONLY_RUN_ONE_FOLD_CV = True
