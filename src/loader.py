@@ -5,15 +5,15 @@ import pandas as pd
 import config
 
 
-def data_load(FEATURES_DICT):
+def data_load(FEATURES_WEIGHTS):
     """ Data loader """
 
     # Groudtruth
     print('[INFO] Loading groundtruth data...')
-    dev_dataframe = pd.read_csv(config.DEV_GROUNDTRUTH) 
+    dev_dataframe = pd.read_csv(config.DEV_GROUNDTRUTH)
 
     # Include captions?
-    if FEATURES_DICT['CAPTIONS']:
+    if FEATURES_WEIGHTS['CAPTIONS'] > 0:
 
         print('[INFO] Loading captions data...')
         # Load captions
@@ -24,11 +24,10 @@ def data_load(FEATURES_DICT):
         dev_dataframe = dev_dataframe.merge(dev_captions)
 
     # Pre-computed features?
-    for feature_name, video_feature in zip(
-        [ 'C3D', 'AESTHETICS', 'HMP' ], 
-        [ FEATURES_DICT['C3D'], FEATURES_DICT['AESTHETICS'], FEATURES_DICT['HMP'] ]):
+    for feature_name in [ 'C3D', 'AESTHETICS', 'HMP', 'ColorHistogram', 'LBP', 'InceptionV3' ]:
 
-        if video_feature:
+        if FEATURES_WEIGHTS[feature_name] > 0:
+
             print('[INFO] Loading {} video data...'.format(feature_name))
             # Load video feature data
             dataframe = get_video_features(feature_name)
@@ -41,30 +40,26 @@ def data_load(FEATURES_DICT):
 def get_video_features(feature_name):
     """ Get video features """
 
-    if feature_name == 'C3D':
-        videos_path = config.DEV_C3D_FEATURE
-        features_dim = config.C3D_DIM
-    elif feature_name == 'AESTHETICS':
-        videos_path = config.DEV_AESTHETIC_FEATURE
-        features_dim = config.AESTHETIC_DIM
-    elif feature_name == 'HMP':
-        videos_path = config.DEV_HMP_FEATURE
-        features_dim = config.HMP_DIM
-    else:
+    if feature_name not in config.FEATURES_PATH:
         raise Exception('Feature {} is not recognized as a valid video feature'.format(feature_name))
+    videos_path = config.FEATURES_PATH[feature_name]
+    features_dim = config.FEATURES_DIM[feature_name]
 
     # Filenames with the features per video
     video_filenames = os.listdir(videos_path)
 
     # CSV features file
-    csv_features_filename = 'data/{}_train.csv'.format(feature_name)
+    csv_features_filename = 'features/{}_train_val.csv'.format(feature_name)
     if not os.path.isfile(csv_features_filename):
         # Create it
         print('[INFO] Creating {}...'.format(csv_features_filename))
         write_filename(csv_features_filename, videos_path, video_filenames, feature_name, features_dim)
-    
+
     # Read features in CSV format
     dataframe = pd.read_csv(csv_features_filename)
+
+    # Fill Nan
+    dataframe.fillna(0, inplace=True)
 
     return dataframe
 
@@ -72,18 +67,81 @@ def get_video_features(feature_name):
 def write_filename(csv_filename, path, filenames, feature_name, features_dim):
     """ Write CSV file with all the features for each video """
 
-    with open(csv_filename, 'w') as f: 
-        # Header
-        header = 'video,' + ','.join([ '{}_{}'.format(feature_name, i) for i in range(features_dim) ])
-        f.write(header + '\n')
-        # Rows
-        for i, video in enumerate(filenames):
-            # print('Iteration: {}'.format(i))
+    if feature_name in ['C3D', 'AESTHETICS']:
+
+        # Fixed number of columns per video file
+
+        with open(csv_filename, 'w') as f:
+            # Header
+            header = 'video,' + ','.join([ '{}_{}'.format(feature_name, i) for i in range(features_dim) ])
+            f.write(header + '\n')
+            # Rows
+            for i, video in enumerate(filenames):
+                # print('Iteration: {}'.format(i))
+                # Get features per video
+                video_features = video.split('.txt')[0] + '.webm'
+                video_features += ',' + read_file_contents(os.path.join(path, video), feature_name)
+                # write it!
+                f.write(video_features + '\n')
+
+    elif feature_name in ['HMP']:
+
+        # Variable number of columns per video file
+
+        # save as array of dictionaries
+        videos = []
+        for video in filenames:
+            video_name = video.split('.txt')[0] + '.webm'
             # Get features per video
-            video_features = video.split('.txt')[0] + '.webm'
-            video_features += ',' + read_file_contents(os.path.join(path, video), feature_name)
-            # write it!
-            f.write(video_features + '\n')
+            v = read_file_contents(os.path.join(path, video), feature_name)
+            v['video'] = video_name
+            videos.append(v)
+
+        # save as dataframe
+        temp_dataframe = pd.DataFrame(videos)
+
+        # save as csv
+        temp_dataframe.to_csv(csv_filename)
+
+    elif feature_name in ['ColorHistogram', 'InceptionV3']:
+
+        # save as array of dictionaries
+        videos = []
+        video_names = list(set([ filename.split('-')[0] for filename in filenames ]))
+        for video in video_names:
+            video_name = video.split('.txt')[0] + '.webm'
+            # Get features per video and per frame
+            v = {}
+            for frame_number in config.THREE_FRAMES:
+                frame_file = '{}-{}.txt'.format(video.split('.txt')[0], frame_number)
+                v.update(read_file_contents(os.path.join(path, frame_file), '{}_{}'.format(feature_name, frame_number)))
+            v['video'] = video_name
+            videos.append(v)
+
+        # save as dataframe
+        temp_dataframe = pd.DataFrame(videos)
+
+        # save as csv
+        temp_dataframe.to_csv(csv_filename)
+
+    elif feature_name in ['LBP']:
+
+        # Fixed number of columns per frame file
+
+        with open(csv_filename, 'w') as f:
+            # Header
+            header = 'video,' + ','.join([ '{}_{}'.format(feature_name, i) for i in range(features_dim) ])
+            f.write(header + '\n')
+            # Rows
+            videos = []
+            video_names = list(set([ filename.split('-')[0] for filename in filenames ]))
+            for video in video_names:
+                video_features = video + '.webm'
+                # Get features per video and per frame
+                for frame_number in config.THREE_FRAMES:
+                    video_features += ',' + read_file_contents(os.path.join(path, '{}-{}.txt'.format(video, frame_number)), feature_name)
+                # write it!
+                f.write(video_features + '\n')
 
 
 # def get_contents(path, filenames):
@@ -102,12 +160,13 @@ def read_file_contents(filename, feature_name):
     """ Read the contents of the file for video processing features like C3D and AESTHETICS"""
     
     with open(filename) as f:
-        if feature_name == 'C3D':
+        if feature_name == 'C3D' or feature_name == 'LBP':
             return ','.join([ feature for feature in f.read().split() ])
         elif feature_name == 'AESTHETICS':
             return ','.join([ feature for feature in f.read().split(',') ])
-        elif feature_name == 'HMP':
-            return ','.join([ feature.split(':')[1] for feature in f.read().split() ])
+        elif feature_name == 'HMP' or feature_name.startswith('ColorHistogram')  or feature_name.startswith('InceptionV3'):
+            return { '{}_{}'.format(feature_name, feature.split(':')[0]) : float(feature.split(':')[1]) 
+                    for feature in f.read().split() }
 
 
 # def read_file_contents(filename, feature_name):
@@ -136,15 +195,15 @@ def load_pretrained_word_vectors():
 
 
 if __name__ == "__main__":
-    FEATURES_DICT = {
-        'CAPTIONS': True,
-        'C3D': True,
-        'AESTHETICS': True,
-        'HMP': True,
+    FEATURES_WEIGHTS = {
+        'CAPTIONS': 0,
+        'C3D': 0,
+        'AESTHETICS': 0,
+        'HMP': 0,
+        'ColorHistogram': 0,
+        'LBP': 0,
+        'InceptionV3': 1,
     }
-    # Loading Groudtruth
-    dataframe = data_load()
-    print(dataframe.head())
     # Loading Groudtruth + Captions
-    dataframe = data_load(FEATURES_DICT)
+    dataframe = data_load(FEATURES_WEIGHTS)
     print(dataframe.head())
