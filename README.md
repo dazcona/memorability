@@ -27,6 +27,10 @@ These videos come with a set of pre-extracted features, such as: Dense SIFT, HoG
 * [jupyter](https://jupyter.org/)
 * [Docker](https://www.docker.com/)
 
+## Results
+
+See the following [table](https://docs.google.com/spreadsheets/d/1LrenTHNGRZzCHYluYl2YPdmlHuUsTJSMhUIb1X91hdk/)
+
 ## Deployment
 
 1. Download the dataset (you may want to use an external drive) via FTP like [here](https://stackoverflow.com/questions/113886/how-to-recursively-download-a-folder-via-ftp-on-linux):
@@ -66,9 +70,9 @@ $ make dev
 $ python src/extract_frames.py
 ```
 
-6. Run the training:
+7. Run the training:
 ```
-$ python src/workflow_cv.py
+$ python src/workflow_split.py
 ```
 
 ## Resources
