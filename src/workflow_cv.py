@@ -25,7 +25,9 @@ np.random.seed(42)
 ## VALUES
 
 with open(MAIN_LOG, 'w') as f:
-    print("""TARGET: {}
+    print("""MEMORABILITY 2019
+CROSS-VALIDATION APPROACH
+TARGET: {}
 FEATURES: {}
 FEATURES_WEIGHTS: {}
 CAPTIONS_ALGORITHM: {} (if captions are used)
@@ -41,7 +43,7 @@ NFOLDS: {}""".format(config.TARGET,
 
 ## LOAD DATA
 
-print('[INFO] Loading data with captions...')
+print('[INFO] Loading data...')
 dataframe = data_load(config.FEATURES_DICT)
 
 X = dataframe.drop(columns=config.TARGET_COLS)
@@ -111,7 +113,7 @@ for train_index, val_index in kf.split(X):
 
                 print('[INFO] Number of features: {}'.format(X_train_features.shape[1]))
                 predictions_features = train_predict(X_train_features, y_train, X_val_features, method=config.ALGORITHM)
-                predictions.append(predictions_features * FEATURES_WEIGHTS[feature_name])
+                predictions.append(predictions_features * config.FEATURES_WEIGHTS[feature_name])
     
     ## EVALUATE
 
@@ -119,11 +121,11 @@ for train_index, val_index in kf.split(X):
 
     print('[INFO] Evaluating the performance of the predictions...')
     corr_coefficient, p_value = evaluate_spearman(y_val, predictions)
-    print('[INFO] Spearman Correlation Coefficient: {:.4f} (p-value {:.4f})'.format(corr_coefficient, p_value))
+    print('[INFO] Spearman Correlation Coefficient: {:.5f} (p-value {:.5f})'.format(corr_coefficient, p_value))
     scores.append(corr_coefficient)
 
     with open(MAIN_LOG, 'a') as f:
-        print("""FOLD {} Cross-Validation. Spearman Correlation Coefficient: {:.4f} (p-value {:.4f})""".format(fold, corr_coefficient, p_value), file=f)
+        print("""FOLD {} Cross-Validation. Spearman Correlation Coefficient: {:.5f} (p-value {:.5f})""".format(fold, corr_coefficient, p_value), file=f)
 
     ## NEXT FOLD
 
