@@ -1,32 +1,40 @@
-
-import os 
+import os
 import datetime
 
 # Column to predict
 TARGET = 'short-term_memorability'
 # Target columns
 TARGET_COLS = [ 'short-term_memorability', 'nb_short-term_annotations', 'long-term_memorability', 'nb_long-term_annotations' ]
-# Dictionary that indicates which data sources to use in the model
-FEATURES_DICT = {
-    'CAPTIONS': True,
-    'C3D': False,
-    'AESTHETICS': False,
-    'HMP': False,
-}
+# Dictionary that indicates which data sources to use in the model and its weight on the overall ensemble model
 FEATURES_WEIGHTS = {
-    'CAPTIONS': 1,
     'C3D': 0,
     'AESTHETICS': 0,
     'HMP': 0,
+    'ColorHistogram': 0,
+    'LBP': 0,
+    'InceptionV3': 0,
+    'CAPTIONS': 0,
+    'PRE-TRAINED NN': 1,
 }
-# Algorithm
-ALGORITHM = 'Bayesian Ridge'
 # Number of folds for Cross-Validation
 NFOLDS = 10
-# Captions approach
-CAPTIONS_ALGORITHM = 'EMBEDDINGS' # TFIDF or EMBEDDINGS
+# Encoding Algorithms
+ENCODING_ALGORITHM = {
+    'CAPTIONS': 'EMBEDDINGS' # TFIDF or EMBEDDINGS
+}
+# Features Algorithms
+FEATURES_ALGORITHM = {
+    'C3D': 'Bayesian Ridge',
+    'AESTHETICS': 'Bayesian Ridge',
+    'HMP': 'SVM Gaussian',
+    'ColorHistogram': 'Bayesian Ridge',
+    'LBP': 'Bayesian Ridge',
+    'InceptionV3': 'Bayesian Ridge',
+    'CAPTIONS': 'SVM Gaussian',
+    'PRE-TRAINED NN': 'VGG16',
+}
 # EPOCHS
-NUM_EPOCHS = 30
+NUM_EPOCHS = 50
 
 # CURRENT DIR
 current_dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -40,7 +48,7 @@ CHECKPOINT_DIR = os.path.join(current_dir_path, '..', 'checkpoints')
 RUN_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, RUN_NAME)
 
 # DATA
-DATA_DIR = '/datasets' # '/Volumes/Samsung_T5/Memorability/data/raw/Memorability 2018/' mounted as datasets in docker-compose.yml
+DATA_DIR = '/datasets'
 
 # DEV
 DEV_DIR = os.path.join(DATA_DIR, 'devset', 'dev-set')
@@ -56,15 +64,31 @@ EMBEDDING_DIM = 300
 
 # FEATURES
 DEV_FEATURES = os.path.join(DEV_DIR, 'features')
-DEV_FEATURES_LIST = ['C3D', 'HMP', 'InceptionV3', 'LBP', 'aesthetic_feat_dev-set_mean', 'ColorHistogram', 'HOG', 'ORB']
 DEV_C3D_FEATURE = os.path.join(DEV_FEATURES, 'C3D')
-DEV_AESTHETIC_FEATURE = os.path.join(DEV_FEATURES, 'aesthetic_feat_dev-set_mean')
+DEV_AESTHETIC_FEATURE = os.path.join(DEV_FEATURES, 'aesthetic_visual_features', 'aesthetic_feat_dev-set_mean')
 DEV_HMP_FEATURE = os.path.join(DEV_FEATURES, 'HMP')
+DEV_ColorHistogram_FEATURE = os.path.join(DEV_FEATURES, 'ColorHistogram')
 DEV_HOG_FEATURE = os.path.join(DEV_FEATURES, 'HOG')
-C3D_DIM = 101
-AESTHETIC_DIM = 109
-HMP_DIM = 6075
-HOG_DIM = 'variable'
+DEV_LBP_FEATURE = os.path.join(DEV_FEATURES, 'LBP')
+DEV_InceptionV3_FEATURE = os.path.join(DEV_FEATURES, 'InceptionV3')
+FEATURES_PATH = {
+    'C3D': DEV_C3D_FEATURE,
+    'AESTHETICS': DEV_AESTHETIC_FEATURE,
+    'HMP': DEV_HMP_FEATURE,
+    'ColorHistogram': DEV_ColorHistogram_FEATURE,
+    'LBP': DEV_LBP_FEATURE,
+    'InceptionV3': DEV_InceptionV3_FEATURE,
+}
+FEATURES_DIM = {
+    'C3D': 101,
+    'AESTHETICS': 109,
+    'HMP': None,
+    'ColorHistogram': None,
+    'LBP': 122 * 3,
+    'InceptionV3': None,
+}
+# First, Middle and Last frames
+THREE_FRAMES = [0, 56, 112]
 
 # SOURCES
 DEV_SOURCES = os.path.join(DEV_DIR, 'sources') # 8,000 videos
