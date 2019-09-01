@@ -36,6 +36,7 @@ def store_frames(videos, sources_path, frames_path):
 
         # Frame
         frame_id = int(video.get(1))
+        # cv2.imwrite("{}/{}-frame-{:03}.jpg".format(frames_path, video_name_short, frame_id), image)
         cv2.imwrite("{}/{}-frame-{}.jpg".format(frames_path, video_name_short, frame_id), image)
         
         # Frames per second
