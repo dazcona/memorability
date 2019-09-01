@@ -10,7 +10,7 @@ def train_predict(X_train, y_train, X_val, method='SVM'):
     print('[INFO] Initializing model...')
     if method == 'SVM':
         model = SVR(gamma='scale')
-    elif method == 'SVM Gaussiam':
+    elif method == 'SVM Gaussian':
         model = SVR(kernel='rbf', gamma='scale')
     elif method == 'Linear Regression':
         model = LinearRegression()
