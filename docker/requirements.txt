@@ -51,3 +51,5 @@ jupyter
 
 xlrd
 wordcloud
+progressbar
+# imutils
