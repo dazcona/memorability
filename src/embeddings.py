@@ -33,7 +33,7 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
     word_index = tokenizer.word_index
     MAX_NUM_WORDS = len(word_index)
     MAX_SEQUENCE_LENGTH = max([ len(caption.split()) for caption in train_captions ])
-    
+
     # X and Y TRAIN
     X_train = pad_sequences(train_sequences, maxlen=MAX_SEQUENCE_LENGTH)
     y_train = np.array(y_train)
@@ -74,7 +74,7 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
     # COMPILE
 
     print('[INFO] Compiling model...')
-    
+
     # Optimizer
     opt = Adam(lr=1e-3, decay=1e-3 / 200)
 
@@ -102,8 +102,9 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
     #    monitor='mean_squared_error', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
     H = model.fit(X_train, y_train,
         validation_data=(X_val, y_val),
-        epochs=config.NUM_EPOCHS, 
+        epochs=config.NUM_EPOCHS,
         shuffle=False,
+        batch_size=32,
         callbacks=[
             tensorboard,
             # checkpoints,
@@ -116,11 +117,11 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
     plt.figure()
     plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["loss"], label="train_loss")
     plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_loss"], label="val_loss")
-    # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["mean_squared_error"], label="train_MSE")
-    # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_mean_squared_error"], label="val_MSE")
-    plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["mean_absolute_error"], label="train_MAE")
-    plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_mean_absolute_error"], label="val_MAE")
-    # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["mean_absolute_percentage_error"], label="train_MAPE")
+    plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["mean_squared_error"], label="train_MSE")
+    plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_mean_squared_error"], label="val_MSE")
+    # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["mean_absolute_error"], label="train_MAE")
+    # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_mean_absolute_error"], label="val_MAE")
+    # # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["mean_absolute_percentage_error"], label="train_MAPE")
     # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_mean_absolute_percentage_error"], label="val_MAPE")
     # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["cosine_proximity"], label="train_cosine_prox")
     # plt.plot(np.arange(0, config.NUM_EPOCHS), H.history["val_cosine_proximity"], label="val_cosine_prox")
@@ -131,7 +132,7 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
     plt.savefig('{}/embeddings_loss_vs_MSE.png'.format(config.RUN_LOG_FOLD_DIR.format(fold)))
 
     print('[INFO] Predicting values...')
-    predicted = model.predict(X_val)
+    predicted = model.predict(X_val).flatten()
 
     ## PLOT EVALUATION
 
@@ -148,4 +149,4 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
     # return predictions
 
     return predicted
-    
+
