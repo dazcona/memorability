@@ -16,4 +16,3 @@ features/*
 !features/.gitkeep
 models/*
 !models/.gitkeep
-output/*

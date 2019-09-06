@@ -75,6 +75,54 @@ $ python src/extract_frames.py
 $ python src/workflow_split.py
 ```
 
+## Activation Maps
+
+Model: 'ResNet152' for frame 48 of the videos
+
+### Top short-term most memorable videos
+
+1. video798.webm
+
+Predicted: [('n04456115', 'torch', 0.23151287), ('n03498962', 'hatchet', 0.094463184), ('n03141823', 'crutch', 0.0654099)]
+
+2. video1981.webm
+
+Predicted: [('n02883205', 'bow_tie', 0.99436283), ('n04456115', 'torch', 0.0010983162), ('n04418357', 'theater_curtain', 0.00067173946)]
+
+3. video4903.webm
+
+Predicted: [('n04404412', 'television', 0.5428618), ('n03180011', 'desktop_computer', 0.115691125), ('n04152593', 'screen', 0.11060062)]
+
+4. video9496.webm
+
+Predicted: [('n09421951', 'sandbar', 0.55648345), ('n09428293', 'seashore', 0.13317421), ('n09332890', 'lakeside', 0.03515112)]
+
+5. video6103.webm
+
+Predicted: [('n03404251', 'fur_coat', 0.66497004), ('n03045698', 'cloak', 0.16292651), ('n04229816', 'ski_mask', 0.024773473)]
+
+### Top long-term most memorable videos
+
+1. video5186.webm
+
+Predicted: [('n03792782', 'mountain_bike', 0.8176742), ('n02835271', 'bicycle-built-for-two', 0.1651485), ('n04509417', 'unicycle', 0.009558631)]
+
+2. video4798.webm
+
+Predicted: [('n03594734', 'jean', 0.64808583), ('n02977058', 'cash_machine', 0.06661992), ('n04479046', 'trench_coat', 0.026500706)]
+
+3. video480.webm
+
+Predicted: [('n02097130', 'giant_schnauzer', 0.28221375), ('n02102318', 'cocker_spaniel', 0.172711), ('n02097298', 'Scotch_terrier', 0.11454323)]
+
+4. video7606.webm
+
+Predicted: [('n03000684', 'chain_saw', 0.15715672), ('n03976657', 'pole', 0.099422), ('n03532672', 'hook', 0.064023055)]
+
+5. video4809.webm
+
+Predicted: [('n04039381', 'racket', 0.9964013), ('n04409515', 'tennis_ball', 0.0032226138), ('n03942813', 'ping-pong_ball', 0.00037128705)]
+
 ## Resources
 
 * MediaEval 2018: http://multimediaeval.org/mediaeval2018/memorability/index.html
