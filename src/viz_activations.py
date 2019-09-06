@@ -38,13 +38,14 @@ FRAME_NUMBERS = [1, 24, 48, 72, 96, 120, 144, 168]
 
 def get_image_activations(image_path):
 
+    print('[INFO] Loading image {}...'.format(image_path))
     image_name = image_path.split(os.path.sep)[-1].split('.')[0]
     print('[INFO] Image Name: {}'.format(image_name))
 
     # Load model and include the densely connected classifer on top
     model = NN_DICT[model_name]['model']
     # model = VGG16(weights='imagenet')
-    print(model.summary())
+    # print(model.summary())
 
     # load image
     image = load_img(image_path, target_size=IMG_SIZE)
@@ -107,5 +108,9 @@ model_name = args["model_name"]
 print('[INFO] Model name: {}...'.format(model_name))
 
 for image_path in os.listdir(config.FRAME_SAMPLES):
-    print('[INFO] Loading image {}...'.format(image_path))
-    get_image_activations(image_path)
+    # Get image path
+    filename = os.path.join(config.FRAME_SAMPLES, image_path)
+    print(filename)
+    # Process image
+    get_image_activations(filename)
+
