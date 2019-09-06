@@ -1,5 +1,5 @@
 # import the necessary packages
-from keras.applications import VGG16, ResNet50, DenseNet121
+from keras.applications import VGG16, ResNet50, ResNet152, DenseNet121
 from keras.applications import imagenet_utils
 from keras.preprocessing.image import img_to_array
 from keras.preprocessing.image import load_img
@@ -21,6 +21,11 @@ NN_DICT = {
     },
     'ResNet50': {
         'model': ResNet50(weights="imagenet", include_top=False, pooling='avg'),
+        # 'size': 2048 * 7 * 7 # if pooling is 'None'
+        'size': 2048, # if pooling is 'avg'
+    },
+    'ResNet152': {
+        'model': ResNet152(weights="imagenet", include_top=False, pooling='avg'),
         # 'size': 2048 * 7 * 7 # if pooling is 'None'
         'size': 2048, # if pooling is 'avg'
     },

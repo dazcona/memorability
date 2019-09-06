@@ -3,10 +3,11 @@ import os
 import numpy as np
 import sys
 import config
-from loader import data_load, load_pretrained_word_vectors
+from loader import data_load
 from sklearn.model_selection import train_test_split
 from tfidf import fit_and_transform_text
 from embeddings import train_embeddings_network
+from features import get_features_from_last_layer_pretrained_nn
 from modelling import train_predict
 from evaluate import evaluate_spearman
 from plotting import plot_true_vs_predicted
@@ -18,8 +19,11 @@ from timeit import default_timer
 start = default_timer()
 
 ## SUM OF FEATURES WEIGHTS MUST BE EQUAL TO 1
+print(config.FEATURES_WEIGHTS.values())
+print(sum(config.FEATURES_WEIGHTS.values()))
+print(sum(config.FEATURES_WEIGHTS.values()) == 1)
 
-assert sum(config.FEATURES_WEIGHTS.values()) == 1, 'ERROR: Sum of feature weights must be equal to 1. Fix your config file'
+assert round(sum(config.FEATURES_WEIGHTS.values())) == 1, 'ERROR: Sum of feature weights must be equal to 1. Fix your config file'
 
 ## LOGDIR
 
@@ -80,9 +84,6 @@ for feature_name in config.FEATURES_WEIGHTS:
 
         if feature_name == 'CAPTIONS' and config.ENCODING_ALGORITHM['CAPTIONS'] == 'EMBEDDINGS':
 
-            print('[INFO] Loading word vectors')
-            word_vectors = load_pretrained_word_vectors()
-
             ## ENCODING & MODELLING
 
             print('[INFO] Processing Embeddings...')
@@ -90,15 +91,13 @@ for feature_name in config.FEATURES_WEIGHTS:
             os.mkdir(config.RUN_LOG_FOLD_DIR.format(fold))
             predictions_features = train_embeddings_network(X_train['caption'], y_train,
                                                             X_val['caption'], y_val,
-                                                            word_vectors, fold)
+                                                            fold)
             predictions.append(predictions_features * config.FEATURES_WEIGHTS[feature_name])
 
         elif feature_name == 'PRE-TRAINED NN':
 
-            pretrained_nn = config.FEATURES_ALGORITHM[feature_name]
-            from features import get_features_from_last_layer_pretrained_nn
+            pretrained_nn = config.PRE_TRAINED_NN
 
-            # todo: put them all in one file
             X_train_features = get_features_from_last_layer_pretrained_nn(X_train['video'], config.DEV_FRAMES,
                                 pretrained_nn, 'train')
             X_val_features = get_features_from_last_layer_pretrained_nn(X_val['video'], config.DEV_FRAMES,
@@ -107,15 +106,9 @@ for feature_name in config.FEATURES_WEIGHTS:
             ## MODELLING
 
             print('[INFO] Number of features: {:,}'.format(X_train_features.shape[1]))
-
-            from sklearn.svm import SVR
-            model = SVR(C=0.1)
-            # fit
-            print('[INFO] Fitting model...')
-            model.fit(X_train_features, y_train)
-            # evaluate the model
-            print("[INFO] Evaluating...")
-            predictions_features = model.predict(X_val_features)
+            predictions_features = train_predict(X_train_features, y_train, X_val_features, pretrained_nn,
+                                                 config.FEATURES_ALGORITHM[feature_name],
+                                                 grid_search=config.GRID_SEARCH)
             predictions.append(predictions_features * config.FEATURES_WEIGHTS[feature_name])
 
         ## TRADITIONAL MACHINE LEARNING
@@ -140,8 +133,9 @@ for feature_name in config.FEATURES_WEIGHTS:
             ## MODELLING
 
             print('[INFO] Number of features: {:,}'.format(X_train_features.shape[1]))
-            predictions_features = train_predict(X_train_features, y_train, X_val_features,
-                                                 method=config.FEATURES_ALGORITHM[feature_name])
+            predictions_features = train_predict(X_train_features, y_train, X_val_features, feature_name,
+                                                 config.FEATURES_ALGORITHM[feature_name],
+                                                 grid_search=config.GRID_SEARCH)
             predictions.append(predictions_features * config.FEATURES_WEIGHTS[feature_name])
 
 ## EVALUATE
@@ -167,4 +161,3 @@ print('[INFO] Execution duration: {:.2f} minutes {:.2f} seconds'.format(minutes,
 
 with open(MAIN_LOG, 'a') as f:
     print('[INFO] Execution duration: {:.2f} minutes {:.2f} seconds'.format(minutes, seconds), file=f)
-

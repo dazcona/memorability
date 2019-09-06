@@ -9,12 +9,12 @@ TARGET_COLS = [ 'short-term_memorability', 'nb_short-term_annotations', 'long-te
 FEATURES_WEIGHTS = {
     'C3D': 0,
     'AESTHETICS': 0,
-    'HMP': 0,
+    'HMP': 0.1,
     'ColorHistogram': 0,
     'LBP': 0,
     'InceptionV3': 0,
-    'CAPTIONS': 0,
-    'PRE-TRAINED NN': 1,
+    'CAPTIONS': 0.1,
+    'PRE-TRAINED NN': 0.8,
 }
 # Number of folds for Cross-Validation
 NFOLDS = 10
@@ -22,16 +22,24 @@ NFOLDS = 10
 ENCODING_ALGORITHM = {
     'CAPTIONS': 'EMBEDDINGS' # TFIDF or EMBEDDINGS
 }
+# Train embeddings
+EMBEDDINGS_TRAINING = False
+# Model's path
+EMBEDDINGS_MODEL = 'checkpoints/run-2019-09-03_16-40-09/weights-fold_0-97-0.0051547588.hdf5'
+# Pre-trained CNN
+PRE_TRAINED_NN = 'ResNet152'
+# GRID SEARCH
+GRID_SEARCH = False
 # Features Algorithms
 FEATURES_ALGORITHM = {
     'C3D': 'Bayesian Ridge',
     'AESTHETICS': 'Bayesian Ridge',
-    'HMP': 'SVM Gaussian',
+    'HMP': 'SVM',
     'ColorHistogram': 'Bayesian Ridge',
     'LBP': 'Bayesian Ridge',
     'InceptionV3': 'Bayesian Ridge',
-    'CAPTIONS': 'SVM Gaussian',
-    'PRE-TRAINED NN': 'VGG16',
+    'CAPTIONS': 'SVM',
+    'PRE-TRAINED NN': 'SVM',
 }
 # EPOCHS
 NUM_EPOCHS = 50
