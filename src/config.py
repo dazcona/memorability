@@ -116,3 +116,6 @@ TEST_FRAMES = os.path.join(TEST_DIR, 'frames')
 
 # ONLY RUN ONCE
 ONLY_RUN_ONE_FOLD_CV = True
+
+# SOME FRAMES
+FRAME_SAMPLES = 'frame_samples/'
