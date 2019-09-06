@@ -1,7 +1,7 @@
 
 # Select a base image:
 
-FROM python:3.7
+FROM tensorflow/tensorflow:1.13.1-gpu-py3
 
 #tensorflow/tensorflow:latest
 
