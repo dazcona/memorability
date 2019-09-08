@@ -14,7 +14,7 @@ The dataset is composed of 10,000 (soundless) short videos extracted from raw fo
 
 These videos come with a set of pre-extracted features, such as: Dense SIFT, HoG descriptors, LBP, GIST, Color Histogram, MFCC, Fc7 layer from AlexNet, C3D features, etc.
 
-## Technologies
+## Technologies used in our work
 
 * [Python 3](https://www.python.org/)
 * [numpy](http://www.numpy.org)
@@ -27,11 +27,11 @@ These videos come with a set of pre-extracted features, such as: Dense SIFT, HoG
 * [jupyter](https://jupyter.org/)
 * [Docker](https://www.docker.com/)
 
-## Results
+## Our Results
 
 See the following [table](https://docs.google.com/spreadsheets/d/1LrenTHNGRZzCHYluYl2YPdmlHuUsTJSMhUIb1X91hdk/)
 
-## Deployment
+## Our Deployment
 
 1. Download the dataset (you may want to use an external drive) via FTP like [here](https://stackoverflow.com/questions/113886/how-to-recursively-download-a-folder-via-ftp-on-linux):
 ```
@@ -70,95 +70,118 @@ $ make dev
 $ python src/extract_frames.py
 ```
 
-7. Modify the file *src/config.py* to run the desired experiment
+7. Modify the file *src/config.py* to run the desired experiment:
 
 8. Run the training:
 ```
 $ python src/workflow_split.py
 ```
 
-## Activation Maps
+9. [Optional] Visualizing heatmaps of class activation:
+```
+$ python src/viz_activations.py --model ResNet152
+```
 
-Model ResNet152 trained with ImageNet was leveraged for the video-frame 48 of the top short-term and long-term most memorable videos. 
+## Visualization: Activation Maps
+
+Model ResNet152 trained with ImageNet was leveraged for the video-frame 48 of the top short-term and long-term most memorable videos. This is very useful for understanding which parts of these given images led the pre-trained CNN to the ImageNet classification. This technique is called *class activation map* (CAM) visualization and consists of producing heatmaps of class activation over input images. For further details see Francois Chollet's Deep Learning with Python book.
 
 ### Top short-term most memorable videos
 
-1. video798.webm
+1. **video798.webm**
 
-Predicted classes: 
-* 'torch': 0.23151287
-* 'hatchet': 0.094463184
-* 'crutch': 0.0654099
+The top-4 classes predicted for this video frame are as follows: 
+* 'torch': 0.23151287 (with 23.25% probability)
+* 'hatchet': 0.094463184 (with 9.44% probability)
+* 'crutch': 0.0654099 (with 6.54% probability)
+* 'pedestal': 0.06340647 (with 6.34% probability)
 
 ![](output/video798-frame-48_CAM.jpg)
 
-2. video1981.webm
+2. **video1981.webm**
 
 * 'bow_tie': 0.99436283
 * 'torch': 0.0010983162
 * 'theater_curtain': 0.00067173946
+* 'feather_boa': 0.0004574099
+* 'theater_curtain': 0.00067173946
+* 'groom': 0.00034087678
 
 ![](output/video1981-frame-48_CAM.jpg)
 
-3. video4903.webm
+3. **video4903.webm**
 
 * 'television': 0.5428618
 * 'desktop_computer': 0.115691125
 * 'screen': 0.11060062
+* 'laptop': 0.06419162
+* 'monitor': 0.05998577
+* 'notebook': 0.040473375
 
 ![](output/video4903-frame-48_CAM.jpg)
 
-4. video9496.webm
+4. **video9496.webm**
 
 * 'sandbar': 0.55648345
 * 'seashore': 0.13317421
 * 'lakeside': 0.03515112
+* 'wreck': 0.028257731
+* 'volcano': 0.017195351
 
 ![](output/video9496-frame-48_CAM.jpg)
 
-5. video6103.webm
+5. **video6103.webm**
 
 * 'fur_coat': 0.66497004
 * 'cloak': 0.16292651
-* 'ski_mask': 0.024773473)]
+* 'ski_mask': 0.024773473
+* 'lab_coat': 0.016840363
 
 ![](output/video6103-frame-48_CAM.jpg)
 
 ### Top long-term most memorable videos
 
-1. video5186.webm
+1. **video5186.webm**
 
 * 'mountain_bike': 0.8176742
 * 'bicycle-built-for-two': 0.1651485
 * 'unicycle': 0.009558631
+* 'alp': 0.0027272117
 
 ![](output/video5186-frame-48_CAM.jpg)
 
-2. video4798.webm
+2. **video4798.webm**
 
 * 'jean': 0.64808583
 * 'cash_machine': 0.06661992
 * 'trench_coat': 0.026500706
+* 'wardrobe': 0.026173087
+* 'prison': 0.025266951
 
 ![](output/video4798-frame-48_CAM.jpg)
 
-3. video480.webm
-
-![](output/video480-frame-48_CAM.jpg)
+3. **video480.webm**
 
 * 'giant_schnauzer': 0.28221375
 * 'cocker_spaniel': 0.172711
 * 'Scotch_terrier': 0.11454323
+* 'Great_Dane': 0.045542818
+* 'Lakeland_terrier': 0.033769395
+* 'standard_schnauzer': 0.030899713
 
-4. video7606.webm
+![](output/video480-frame-48_CAM.jpg)
+
+4. **video7606.webm**
 
 * 'chain_saw': 0.15715672
 * 'pole': 0.099422
 * 'hook': 0.064023055
+* 'paintbrush': 0.04958201
+* 'shovel': 0.031757597
 
 ![](output/video7606-frame-48_CAM.jpg)
 
-5. video4809.webm
+5. **video4809.webm**
 
 * 'racket': 0.9964013
 * 'tennis_ball': 0.0032226138
@@ -166,7 +189,7 @@ Predicted classes:
 
 ![](output/video4809-frame-48_CAM.jpg)
 
-## Resources
+## Learning Resources
 
 * MediaEval 2018: http://multimediaeval.org/mediaeval2018/memorability/index.html
 * MediaEval 2018: Predicting Media Memorability: https://www.slideshare.net/multimediaeval/mediaeval-2018-predicting-media-memorability
