@@ -70,58 +70,101 @@ $ make dev
 $ python src/extract_frames.py
 ```
 
-7. Run the training:
+7. Modify the file *src/config.py* to run the desired experiment
+
+8. Run the training:
 ```
 $ python src/workflow_split.py
 ```
 
 ## Activation Maps
 
-Model: 'ResNet152' for frame 48 of the videos
+Model ResNet152 trained with ImageNet was leveraged for the video-frame 48 of the top short-term and long-term most memorable videos. 
 
 ### Top short-term most memorable videos
 
 1. video798.webm
 
-Predicted: [('n04456115', 'torch', 0.23151287), ('n03498962', 'hatchet', 0.094463184), ('n03141823', 'crutch', 0.0654099)]
+Predicted classes: 
+* 'torch': 0.23151287
+* 'hatchet': 0.094463184
+* 'crutch': 0.0654099
+
+![](output/video798-frame-48_CAM.jpg)
 
 2. video1981.webm
 
-Predicted: [('n02883205', 'bow_tie', 0.99436283), ('n04456115', 'torch', 0.0010983162), ('n04418357', 'theater_curtain', 0.00067173946)]
+* 'bow_tie': 0.99436283
+* 'torch': 0.0010983162
+* 'theater_curtain': 0.00067173946
+
+![](output/video1981-frame-48_CAM.jpg)
 
 3. video4903.webm
 
-Predicted: [('n04404412', 'television', 0.5428618), ('n03180011', 'desktop_computer', 0.115691125), ('n04152593', 'screen', 0.11060062)]
+* 'television': 0.5428618
+* 'desktop_computer': 0.115691125
+* 'screen': 0.11060062
+
+![](output/video4903-frame-48_CAM.jpg)
 
 4. video9496.webm
 
-Predicted: [('n09421951', 'sandbar', 0.55648345), ('n09428293', 'seashore', 0.13317421), ('n09332890', 'lakeside', 0.03515112)]
+* 'sandbar': 0.55648345
+* 'seashore': 0.13317421
+* 'lakeside': 0.03515112
+
+![](output/video9496-frame-48_CAM.jpg)
 
 5. video6103.webm
 
-Predicted: [('n03404251', 'fur_coat', 0.66497004), ('n03045698', 'cloak', 0.16292651), ('n04229816', 'ski_mask', 0.024773473)]
+* 'fur_coat': 0.66497004
+* 'cloak': 0.16292651
+* 'ski_mask': 0.024773473)]
+
+![](output/video6103-frame-48_CAM.jpg)
 
 ### Top long-term most memorable videos
 
 1. video5186.webm
 
-Predicted: [('n03792782', 'mountain_bike', 0.8176742), ('n02835271', 'bicycle-built-for-two', 0.1651485), ('n04509417', 'unicycle', 0.009558631)]
+* 'mountain_bike': 0.8176742
+* 'bicycle-built-for-two': 0.1651485
+* 'unicycle': 0.009558631
+
+![](output/video5186-frame-48_CAM.jpg)
 
 2. video4798.webm
 
-Predicted: [('n03594734', 'jean', 0.64808583), ('n02977058', 'cash_machine', 0.06661992), ('n04479046', 'trench_coat', 0.026500706)]
+* 'jean': 0.64808583
+* 'cash_machine': 0.06661992
+* 'trench_coat': 0.026500706
+
+![](output/video4798-frame-48_CAM.jpg)
 
 3. video480.webm
 
-Predicted: [('n02097130', 'giant_schnauzer', 0.28221375), ('n02102318', 'cocker_spaniel', 0.172711), ('n02097298', 'Scotch_terrier', 0.11454323)]
+![](output/video480-frame-48_CAM.jpg)
+
+* 'giant_schnauzer': 0.28221375
+* 'cocker_spaniel': 0.172711
+* 'Scotch_terrier': 0.11454323
 
 4. video7606.webm
 
-Predicted: [('n03000684', 'chain_saw', 0.15715672), ('n03976657', 'pole', 0.099422), ('n03532672', 'hook', 0.064023055)]
+* 'chain_saw': 0.15715672
+* 'pole': 0.099422
+* 'hook': 0.064023055
+
+![](output/video7606-frame-48_CAM.jpg)
 
 5. video4809.webm
 
-Predicted: [('n04039381', 'racket', 0.9964013), ('n04409515', 'tennis_ball', 0.0032226138), ('n03942813', 'ping-pong_ball', 0.00037128705)]
+* 'racket': 0.9964013
+* 'tennis_ball': 0.0032226138
+* 'ping-pong_ball': 0.00037128705
+
+![](output/video4809-frame-48_CAM.jpg)
 
 ## Resources
 
