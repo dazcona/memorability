@@ -19,8 +19,8 @@ NUM_UNITS = 64
 DROPOUT = 0.75
 RECURRENT_DROPOUT = 0.75
 LEARNING_RATE = 1e-3
-DECAY = 1e-3 / 200
-NUM_EPOCHS = 1000
+NUM_EPOCHS = 200
+DECAY = 1e-3 / NUM_EPOCHS
 
 
 def train_embeddings_network(train_captions, y_train, validation_captions, y_val, fold):

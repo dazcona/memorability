@@ -11,7 +11,9 @@ from features import get_features_from_last_layer_pretrained_nn
 from modelling import train_predict
 from evaluate import evaluate_spearman
 from plotting import plot_true_vs_predicted
+from fine-tuning import train_fine_tuned_cnn
 from timeit import default_timer
+# from sms import send
 
 
 ## START
@@ -19,10 +21,6 @@ from timeit import default_timer
 start = default_timer()
 
 ## SUM OF FEATURES WEIGHTS MUST BE EQUAL TO 1
-print(config.FEATURES_WEIGHTS.values())
-print(sum(config.FEATURES_WEIGHTS.values()))
-print(sum(config.FEATURES_WEIGHTS.values()) == 1)
-
 assert round(sum(config.FEATURES_WEIGHTS.values())) == 1, 'ERROR: Sum of feature weights must be equal to 1. Fix your config file'
 
 ## LOGDIR
@@ -96,6 +94,8 @@ for feature_name in config.FEATURES_WEIGHTS:
 
         elif feature_name == 'PRE-TRAINED NN':
 
+            # PRE-TRAINED CNN AS FEATURE EXTRACTOR
+
             pretrained_nn = config.PRE_TRAINED_NN
 
             X_train_features = get_features_from_last_layer_pretrained_nn(X_train['video'], config.DEV_FRAMES,
@@ -109,6 +109,15 @@ for feature_name in config.FEATURES_WEIGHTS:
             predictions_features = train_predict(X_train_features, y_train, X_val_features, pretrained_nn,
                                                  config.FEATURES_ALGORITHM[feature_name],
                                                  grid_search=config.GRID_SEARCH)
+            predictions.append(predictions_features * config.FEATURES_WEIGHTS[feature_name])
+
+        elif feature_name == 'FINE-TUNED NN':
+
+            ## FINE-TUNED CNN
+
+            predictions_features = train_fine_tuned_cnn(X_train['video'], X_val['video'], 
+                                                    y_train, y_val, config.DEV_FRAMES)
+
             predictions.append(predictions_features * config.FEATURES_WEIGHTS[feature_name])
 
         ## TRADITIONAL MACHINE LEARNING
@@ -161,3 +170,9 @@ print('[INFO] Execution duration: {:.2f} minutes {:.2f} seconds'.format(minutes,
 
 with open(MAIN_LOG, 'a') as f:
     print('[INFO] Execution duration: {:.2f} minutes {:.2f} seconds'.format(minutes, seconds), file=f)
+
+## SEND TEXT
+
+# with open(MAIN_LOG) as f:
+#     text = f.read()
+# send(text)

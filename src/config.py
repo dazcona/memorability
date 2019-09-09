@@ -15,6 +15,7 @@ FEATURES_WEIGHTS = {
     'InceptionV3': 0,
     'CAPTIONS': 0.1,
     'PRE-TRAINED NN': 0.8,
+    'FINE-TUNED NN': 0,
 }
 # Number of folds for Cross-Validation
 NFOLDS = 10
