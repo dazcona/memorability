@@ -16,7 +16,7 @@ seaborn
 
 opencv-python
 pillow
-# scikit-image
+scikit-image
 # imageio
 # ffmpeg
 # moviepy
@@ -46,6 +46,7 @@ jupyter
 # Flask
 # setuptools 
 # cmake
+tqdm
 
 ## Utils:
 

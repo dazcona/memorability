@@ -1,0 +1,422 @@
+
+import os
+import numpy as np
+import pandas as pd
+from keras.applications import ResNet152, ResNet50
+from keras.applications import imagenet_utils
+from keras.preprocessing.image import img_to_array, load_img, ImageDataGenerator
+from keras.models import Model
+from keras.optimizers import Adam, RMSprop, SGD
+from keras.layers import Input, Dense, Flatten, Dropout
+from keras.callbacks import TensorBoard, ModelCheckpoint
+import h5py
+import progressbar
+from skimage.io import imread
+from skimage.transform import resize
+import config
+from keras.models import load_model
+# import tensorflow as tf
+# from keras.backend.tensorflow_backend import set_session
+
+# frame numbers
+FRAME_NUMBERS = [1, 24, 48, 72, 96, 120, 144, 168]
+# Image Size to input the model
+# IMG_SIZE = (1080, 1920)
+IMG_SIZE = (224, 224)
+# Hyperparameters
+NEURONS = 256
+LEARNING_RATE = 1e-3
+EPOCHS_WARMUP = 25
+EPOCHS = 100
+DECAY = 1e-3 / EPOCHS_WARMUP
+DROPOUT = 0.5
+LAYER_TO_TRAIN_FROM = 175
+
+# tf_config = tf.ConfigProto()
+# tf_config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
+# sess = tf.Session(config=tf_config)
+# set_session(sess)  # set this TensorFlow session as the default 
+
+# import pdb; pdb.set_trace()
+
+def get_data(videos, y, frames_path):
+
+    # TEST one frame only
+    # frame = 48
+    image_paths = [
+        os.path.join(frames_path, video.split('.webm')[0] + '-frame-{}.jpg'.format(frame))
+        for video in videos
+        for frame in FRAME_NUMBERS
+    ]
+    # y_frames = y 
+    y_frames = np.repeat(y, len(FRAME_NUMBERS)) 
+    print("[INFO] Images: {:,}...".format(len(image_paths)))
+    print("[INFO] Scores: {:,}...".format(len(y_frames)))
+
+    return image_paths, y_frames
+
+
+def store_images_as_array(videos, y, frames_path, filename):
+
+    if not os.path.isfile(filename):
+
+        print('[INFO] Creating arrays...')
+
+        image_paths = [
+            os.path.join(frames_path, video.split('.webm')[0] + '-frame-{}.jpg'.format(frame))
+            for video in videos
+            for frame in FRAME_NUMBERS
+        ]
+        y_frames = np.repeat(y, len(FRAME_NUMBERS)) 
+        print("[INFO] Images: {:,}...".format(len(image_paths)))
+        print("[INFO] Scores: {:,}...".format(len(y_frames)))
+
+        # initialize the progress bar
+        widgets = ["Processing images: ", progressbar.Percentage(), " ", progressbar.Bar(), " ", progressbar.ETA()]
+        pbar = progressbar.ProgressBar(maxval=len(image_paths), widgets=widgets).start()
+
+        batch_size = 32
+
+        with h5py.File(filename, 'w') as h5f:
+
+            h5f.create_dataset('y_frames', data=y_frames)
+
+            images = h5f.create_dataset('images', (len(image_paths), 224, 224, 3))
+
+            # loop over the images in batches
+            for i in np.arange(0, len(image_paths), batch_size):
+                
+                batch_paths = image_paths[i:i + batch_size]
+                batch_images = []
+
+                # loop over the images in the current batch
+                for image_path in batch_paths:
+                    
+                    # load the input image
+                    image = load_img(image_path, target_size=IMG_SIZE)
+                    image = img_to_array(image)
+                    # preprocess the image by (1) expanding the dimensions and
+                    # (2) subtracting the mean RGB pixel intensity from the
+                    # ImageNet dataset
+                    image = np.expand_dims(image, axis=0)
+                    image = imagenet_utils.preprocess_input(image)
+                    batch_images.append(image)
+
+                # stack images
+                batch_images = np.vstack(batch_images)
+                
+                # add them to the HDF5 file
+                images[i:i + batch_size] = batch_images
+
+                # update the progress bar
+                pbar.update(i)
+
+            # progress bar
+            pbar.finish()
+
+    else:
+
+        print('[INFO] HDF5 file "{}" already exists...'.format(filename))
+
+
+from keras.utils import Sequence
+
+# class My_First_Generator(Sequence):
+
+#     def __init__(self, h5f, batch_size):
+#         self.h5f = h5f
+#         self.batch_size = batch_size
+
+#     def __len__(self):
+#         return len(self.h5f['y_frames'])
+
+#     def __getitem__(self, idx):
+#         batch_x = self.h5f['images'][idx * self.batch_size:(idx + 1) * self.batch_size]
+#         batch_y = self.h5f['y_frames'][idx * self.batch_size:(idx + 1) * self.batch_size]
+#         return batch_x, batch_y
+
+class My_Generator(Sequence):
+
+    def __init__(self, filenames, labels, batch_size):
+        self.filenames = filenames
+        self.labels = labels
+        self.batch_size = batch_size
+
+    def __len__(self):
+        return np.ceil(len(self.filenames) / float(self.batch_size)).astype(int)
+
+    def __getitem__(self, idx):
+        batch_x = self.filenames[idx * self.batch_size:(idx + 1) * self.batch_size]
+        batch_y = np.array(self.labels[idx * self.batch_size:(idx + 1) * self.batch_size])
+        batch_x_images = []
+        for image_path in batch_x:
+            image = load_img(image_path, target_size=(224, 224))
+            image = img_to_array(image)
+            image = imagenet_utils.preprocess_input(image)
+            batch_x_images.append(image)
+        return np.array(batch_x_images), batch_y
+
+
+# class My_Fast_Generator(Sequence):
+
+#     def __init__(self, filenames, labels, batch_size):
+#         self.filenames = filenames
+#         self.labels = labels
+#         self.batch_size = batch_size
+
+#     def __len__(self):
+#         return np.ceil(len(self.filenames) / float(self.batch_size)).astype(int)
+
+#     def __getitem__(self, idx):
+#         batch_x = self.filenames[idx * self.batch_size:(idx + 1) * self.batch_size]
+#         batch_y = np.array(self.labels[idx * self.batch_size:(idx + 1) * self.batch_size])
+#         batch_x_images = []
+#         for image_path in batch_x:
+#             image = np.load(image_path)
+#             ### batch_x_images.append(image) # image = np.expand_dims(image, axis=0) needs to be removed from open_image in notebook
+#             batch_x_images.append(image[0])
+#         return np.array(batch_x_images), batch_y
+
+
+# def process_image(image_path, size):
+#     image = load_img(image_path, target_size=size)
+#     image = img_to_array(image)
+#     image = np.expand_dims(image, axis=0)
+#     image = imagenet_utils.preprocess_input(image)
+#     return image
+
+# def chunk(items, batch_size):
+#     for i in np.arange(0, len(items), batch_size):
+#         yield items[i:i + batch_size]
+
+# def my_data_generator(dataframe, batch_size, size=(224, 224)):
+#     for batch in chunk(list(dataframe.iterrows()), batch_size):
+#         images = []
+#         labels = []
+#         for idx, (image, score) in batch:
+#             images.append(process_image(image, size))
+#             labels.append(s
+#         images = np.vstack(images)
+#         yield (images, labels)
+
+
+def train_fine_tuned_cnn(train_videos, val_videos, y_train, y_val, frames_path):
+
+    print("[INFO] Fine-tuning CNN...")
+
+    # print('[INFO] Converting Training images to arrays...')
+    # training_hdf5 = 'features/images_train.h5'
+    # store_images_as_array(train_videos, y_train, frames_path, training_hdf5)
+
+    # print('[INFO] Converting Validation images to arrays...')
+    # validation_hdf5 = 'features/images_val.h5'
+    # store_images_as_array(val_videos, y_val, frames_path, validation_hdf5)
+
+    print('[INFO] Creating generators...')
+    batch_size = 32
+    # batch_size = 64
+
+    # h5f_train = h5py.File('features/images_train.h5')
+    # h5f_val = h5py.File('features/images_val.h5')
+    # my_training_batch_generator = My_First_Generator(h5f_train, batch_size)
+    # my_validation_batch_generator = My_First_Generator(h5f_val, batch_size)
+
+    train_images_paths, train_y = get_data(train_videos, y_train, frames_path)
+    val_images_paths, val_y = get_data(val_videos, y_val, frames_path)
+    my_training_batch_generator = My_Generator(train_images_paths, train_y, batch_size)
+    my_validation_batch_generator = My_Generator(val_images_paths, val_y, batch_size)
+    
+    # train_images, train_y = get_data(train_videos, y_train, frames_path)
+    # val_images, val_y = get_data(val_videos, y_val, frames_path)
+    # df_train = pd.DataFrame({ 'image': train_images, 'score': train_y })
+    # df_val = pd.DataFrame({ 'image': val_images, 'score': val_y })
+    # my_training_batch_generator = my_data_generator(df_train, batch_size=32)
+    # my_validation_batch_generator = my_data_generator(df_val, batch_size) 
+
+    NUM_TRAINING_SAMPLES = len(train_images_paths) *  len(FRAME_NUMBERS)
+    NUM_VALIDATION_SAMPLES = len(val_images_paths) *  len(FRAME_NUMBERS)
+    # NUM_TRAINING_SAMPLES = len(train_images_paths)
+    # NUM_VALIDATION_SAMPLES = len(val_images_paths)
+
+    ## TRAINING
+
+    if config.FINE_TUNED_MODEL == '':
+
+        ## MODEL
+
+        # Base Model
+        print("[INFO] Defining base model...")
+        base_model = ResNet152(weights='imagenet', include_top=False, input_tensor=Input(shape=(224, 224, 3)))
+
+        # Head Model
+        head_model = base_model.output
+        head_model = Flatten(name="flatten")(head_model)
+        head_model = Dense(NEURONS, activation="relu")(head_model)
+        head_model = Dropout(DROPOUT)(head_model)
+        head_model = Dense(1, activation='sigmoid')(head_model)
+
+        # Combine models
+        model = Model(inputs=base_model.input, outputs=head_model)
+
+        print("[INFO] Model layers...")
+        for (i, layer) in enumerate(model.layers):
+            print("[INFO] {}\t{}".format(i, layer.__class__.__name__))
+
+        print("[INFO] Freezing the model's layers...")
+        # loop over all layers in the base model and freeze them so they
+        # will *not* be updated during the training process
+        for layer in base_model.layers:
+            layer.trainable = False
+
+        # compile our model (this needs to be done after our setting our
+        # layers to being non-trainable
+        print("[INFO] Compiling model...")
+        # Optimizer
+        # opt = SGD(lr=LEARNING_RATE)
+        opt = Adam(lr=LEARNING_RATE, decay=DECAY)
+        # opt = RMSprop(lr=LEARNING_RATE)
+        model.compile(
+            loss='mean_squared_error',
+            optimizer=opt,
+            metrics=['mse', 'mae', 'mape'],
+        )
+
+        # train the head of the network for a few epochs (all other
+        # layers are frozen) -- this will allow the new FC layers to
+        # start to become initialized with actual "learned" values
+        # versus pure random
+        print("[INFO] Training model's head...")
+
+        fold = 0
+
+        tensorboard = TensorBoard(log_dir=config.RUN_LOG_FOLD_DIR.format(fold)) # config.RUN_LOG_DIR
+        
+        checkpoints = ModelCheckpoint(
+        os.path.join(
+            config.RUN_CHECKPOINT_DIR,
+            'weights-fold_' + str(fold) + '-{epoch:02d}-{val_loss:.10f}.hdf5'),
+        monitor='val_mean_squared_error', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
+
+        H = model.fit_generator(
+            generator=my_training_batch_generator,
+            steps_per_epoch=NUM_TRAINING_SAMPLES // batch_size,
+            epochs=EPOCHS_WARMUP,
+            validation_data=my_validation_batch_generator,
+            validation_steps=NUM_VALIDATION_SAMPLES // batch_size,
+            use_multiprocessing=True,
+            workers=4,
+            max_queue_size=32,
+            verbose=1,
+            callbacks=[
+                tensorboard,
+                checkpoints,
+                ])
+
+        # save model
+        model.save(os.path.join(config.RUN_LOG_DIR, 'fine_tuned_model_after_warmup.h5'))
+
+    else:
+
+        model_name = config.FINE_TUNED_MODEL
+        print('[INFO] Loading model {}...'.format(model_name))
+        model = load_model(model_name)
+
+    # # close the file
+    # print("[INFO] Closing HDF5 files...")
+    # h5f_train.close()
+    # h5f_val.close()
+
+    # evaluate the network after initialization
+    print("[INFO] Predicting values after head warm up...")
+    predictions_frames_after_warmup = model.predict_generator(
+        my_validation_batch_generator,
+	    # steps=NUM_VALIDATION_SAMPLES // batch_size
+    )
+
+    # one frame
+    # predictions_frames_after_warmup = predictions_frames_after_warmup.flatten()
+    # np.savetxt(os.path.join(config.RUN_LOG_DIR, 'predictions_frames_after_warmup.out'),
+    #     predictions_frames_after_warmup, delimiter=',')
+    # return predictions_frames_after_warmup
+
+    # multiple frames
+    # flatten vector
+    predictions_frames_after_warmup = predictions_frames_after_warmup.flatten()
+    # Average for each video 
+    predictions_videos_after_warmup = np.mean(predictions_frames_after_warmup.reshape(-1, len(FRAME_NUMBERS)), axis=1)
+    # save array as text
+    np.savetxt(os.path.join(config.RUN_LOG_DIR, 'predictions_videos_after_warmup.out'),
+        predictions_videos_after_warmup, delimiter=',')
+    
+    return predictions_videos_after_warmup
+
+    # now that the head FC layers have been trained/initialized, lets
+    # unfreeze the final set of CONV layers and make them trainable
+
+    for layer in model.layers[LAYER_TO_TRAIN_FROM:]:
+        layer.trainable = True
+
+    # loop over the layers in the network and display them to the console
+    print("[INFO] showing layers...")
+    for (i, layer) in enumerate(model.layers):
+        print("[INFO] {}\t{}".format(i, layer.__class__.__name__))
+
+    import sys; sys.exit(1)
+
+    # 
+    print("[INFO] Re-compiling model...")
+    opt = SDG(lr=LEARNING_RATE)
+    model.compile(
+        loss='mean_squared_error',
+        optimizer=opt,
+        metrics=['mse', 'mae', 'mape'],
+    )
+
+    # ...
+    print("[INFO] Fine-tuning model...")
+
+    fold = 1
+
+    tensorboard = TensorBoard(log_dir=config.RUN_LOG_FOLD_DIR.format(fold)) # config.RUN_LOG_DIR
+    
+    checkpoints = ModelCheckpoint(
+    os.path.join(
+        config.RUN_CHECKPOINT_DIR,
+        'weights-fold_' + str(fold) + '-{epoch:02d}-{val_loss:.10f}.hdf5'),
+    monitor='val_mean_squared_error', verbose=1, save_best_only=True, save_weights_only=False, mode='auto', period=1)
+
+    H = model.fit_generator(
+        generator=my_training_batch_generator,
+        steps_per_epoch=NUM_TRAINING_SAMPLES // batch_size,
+        epochs=EPOCHS,
+        validation_data=my_validation_batch_generator,
+        validation_steps=NUM_VALIDATION_SAMPLES // batch_size,
+        use_multiprocessing=True,
+        workers=4,
+        max_queue_size=32,
+        verbose=1,
+        callbacks=[
+            tensorboard,
+            checkpoints,
+            ])
+
+    # save model
+    model.save(os.path.join(config.RUN_LOG_DIR, 'fine_tuned_model.h5'))
+
+    # evaluate the network after initialization
+    print("[INFO] Predicting values...")
+    predictions_frames = model.predict_generator(
+        my_validation_batch_generator,
+	    steps=NUM_VALIDATION_SAMPLES // batch_size
+    )
+    # flatten vector
+    predictions_frames = predictions_frames.flatten()
+    # Average for each video 
+    predictions_videos = np.mean(predictions_frames.reshape(-1, len(FRAME_NUMBERS)), axis=1)
+    # save array as text
+    print(predictions_videos)
+    print(predictions_videos.shape)
+    np.savetxt(os.path.join(config.RUN_LOG_DIR, 'predictions_videos.out'),
+        predictions_videos, delimiter=',')
+
+    return predictions_videos

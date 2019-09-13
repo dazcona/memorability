@@ -9,16 +9,17 @@ TARGET_COLS = [ 'short-term_memorability', 'nb_short-term_annotations', 'long-te
 FEATURES_WEIGHTS = {
     'C3D': 0,
     'AESTHETICS': 0,
-    'HMP': 0.1,
+    'HMP': 0,
     'ColorHistogram': 0,
     'LBP': 0,
     'InceptionV3': 0,
-    'CAPTIONS': 0.1,
-    'PRE-TRAINED NN': 0.8,
-    'FINE-TUNED NN': 0,
+    'CAPTIONS': 0,
+    'PRE-TRAINED NN': 0,
+    'FINE-TUNED NN': 1
 }
 # Number of folds for Cross-Validation
 NFOLDS = 10
+
 # Encoding Algorithms
 ENCODING_ALGORITHM = {
     'CAPTIONS': 'EMBEDDINGS' # TFIDF or EMBEDDINGS
@@ -27,8 +28,7 @@ ENCODING_ALGORITHM = {
 EMBEDDINGS_TRAINING = False
 # Model's path
 EMBEDDINGS_MODEL = 'checkpoints/run-2019-09-03_16-40-09/weights-fold_0-97-0.0051547588.hdf5'
-# Pre-trained CNN
-PRE_TRAINED_NN = 'ResNet152'
+
 # GRID SEARCH
 GRID_SEARCH = False
 # Features Algorithms
@@ -41,9 +41,26 @@ FEATURES_ALGORITHM = {
     'InceptionV3': 'Bayesian Ridge',
     'CAPTIONS': 'SVM',
     'PRE-TRAINED NN': 'SVM',
+    'FINE-TUNED NN': 'Fine tuning from base model ResNet50',
 }
+
+# Pre-trained CNN
+PRE_TRAINED_NN = 'ResNet152'
+
+# Fine-tunning CNN
+FINE_TUNED_MODEL = ''
+# 'checkpoints/run-2019-09-13_14-44-43/weights-fold_0-06-17.9225301506.hdf5'
+# 'checkpoints/run-2019-09-13_12-12-56/weights-fold_0-01-0.0247115156.hdf5'
+# 'checkpoints/run-2019-09-13_11-33-32/weights-fold_0-01-0.0275342398.hdf5'
+# 'checkpoints/run-2019-09-13_11-14-40/weights-fold_0-01-0.0275342398.hdf5'
+# 'checkpoints/run-2019-09-12_17-57-21/weights-fold_0-01-0.0275577824.hdf5'
+# 'checkpoints/run-2019-09-12_17-11-19/weights-fold_0-01-0.0275342398.hdf5'
+# 'checkpoints/run-2019-09-12_16-05-08/weights-fold_0-01-0.0241449984.hdf5'
+# 'checkpoints/run-2019-09-11_17-55-01/weights-fold_0-08-0.0069531268.hdf5'
+# 'logs/run-2019-09-11_17-55-01/fine_tuning_model_after_warmup.h5'
+
 # EPOCHS
-NUM_EPOCHS = 50
+NUM_EPOCHS = 100
 
 # CURRENT DIR
 current_dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -105,6 +122,7 @@ DEV_SOURCES = os.path.join(DEV_DIR, 'sources') # 8,000 videos
 
 # FRAMES
 DEV_FRAMES = os.path.join(DEV_DIR, 'frames')
+DEV_NUMPY_FRAMES = os.path.join(DEV_DIR, 'npy_frames')
 
 # TEST
 TEST_GROUNDTRUTH = os.path.join(DATA_DIR, 'testset', 'test-set_list.txt')

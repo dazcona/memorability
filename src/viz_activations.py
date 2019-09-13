@@ -55,7 +55,7 @@ def get_image_activations(image_path):
 
     # predict
     predictions = model.predict(image)
-    print('Predicted:', imagenet_utils.decode_predictions(predictions, top=3)[0])
+    print('Predicted:', imagenet_utils.decode_predictions(predictions, top=6)[0])
     index = np.argmax(predictions[0])
     print('Index:', index)
 

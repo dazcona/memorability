@@ -7,13 +7,13 @@ from loader import data_load
 from sklearn.model_selection import train_test_split
 from tfidf import fit_and_transform_text
 from embeddings import train_embeddings_network
-from features import get_features_from_last_layer_pretrained_nn
+from pretrained_cnn import get_features_from_last_layer_pretrained_nn
 from modelling import train_predict
 from evaluate import evaluate_spearman
 from plotting import plot_true_vs_predicted
-from fine-tuning import train_fine_tuned_cnn
+from fine_tuning import train_fine_tuned_cnn
 from timeit import default_timer
-# from sms import send
+from sms import send
 
 
 ## START
@@ -41,14 +41,13 @@ with open(MAIN_LOG, 'w') as f:
 SPLIT APPROACH
 TARGET: {}
 FEATURES_WEIGHTS: {}
-FEATURES_ALGORITHM: {}
-NUM_EPOCHS: {}""".format(config.TARGET,
+FEATURES_ALGORITHM: {}""".format(config.TARGET,
     ', '.join([ '{} ({:.0%})'.format(feature, weight) for feature, weight in config.FEATURES_WEIGHTS.items()
                                                         if weight > 0 ]),
     ', '.join([ '{}: {}'.format(feature, config.FEATURES_ALGORITHM[feature])
                                         for feature, weight in config.FEATURES_WEIGHTS.items()
                                             if weight > 0 ]),
-    config.NUM_EPOCHS), file=f)
+), file=f)
 
 ## LOAD DATA
 
@@ -169,10 +168,10 @@ minutes, seconds = divmod(end, 60)
 print('[INFO] Execution duration: {:.2f} minutes {:.2f} seconds'.format(minutes, seconds))
 
 with open(MAIN_LOG, 'a') as f:
-    print('[INFO] Execution duration: {:.2f} minutes {:.2f} seconds'.format(minutes, seconds), file=f)
+    print('Execution duration: {:.2f} minutes {:.2f} seconds'.format(minutes, seconds), file=f)
 
 ## SEND TEXT
 
-# with open(MAIN_LOG) as f:
-#     text = f.read()
-# send(text)
+with open(MAIN_LOG) as f:
+    text = f.read()
+send(text)

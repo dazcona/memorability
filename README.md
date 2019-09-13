@@ -26,6 +26,7 @@ These videos come with a set of pre-extracted features, such as: Dense SIFT, HoG
 * [tensorflow](https://www.tensorflow.org/)
 * [jupyter](https://jupyter.org/)
 * [Docker](https://www.docker.com/)
+* [HDF5](https://www.h5py.org/)
 
 ## Our Results
 
@@ -201,3 +202,7 @@ The top-4 classes predicted for this video frame are as follows:
 * https://towardsdatascience.com/machine-learning-word-embedding-sentiment-classification-using-keras-b83c28087456
 * Keras custom metrics: https://machinelearningmastery.com/custom-metrics-deep-learning-keras-python/
 * How to Train a Final Machine Learning Model: https://machinelearningmastery.com/train-final-machine-learning-model/
+* https://medium.com/the-artificial-impostor/custom-image-augmentation-with-keras-70595b01aeac
+* https://www.pyimagesearch.com/2018/12/24/how-to-use-keras-fit-and-fit_generator-a-hands-on-tutorial/
+* https://keras.io/utils/#sequence
+* https://medium.com/datadriveninvestor/keras-training-on-large-datasets-3e9d9dbc09d4
