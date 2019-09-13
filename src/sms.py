@@ -13,3 +13,4 @@ def send(message):
 
 if __name__ == "__main__":
 	send('Hi! This is a test!')
+	print('Sending text...{}'.format(message))
