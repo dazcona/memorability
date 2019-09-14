@@ -1,4 +1,3 @@
-
 import os
 import numpy as np
 import pandas as pd
@@ -30,23 +29,22 @@ FRAME_NUMBERS = [1, 24, 48, 72, 96, 120, 144, 168]
 IMG_SIZE = (224, 224)
 # Hyperparameters
 EPOCHS_WARMUP = 1
-LEARNING_RATE = 7e-4
-DECAY = 0 # LEARNING_RATE / EPOCHS_WARMUP
-DROPOUT = 0.75
+LEARNING_RATE = 1e-3
+DECAY = LEARNING_RATE / 25
+DROPOUT = 0.5
 EPOCHS = 3
 LAYER_TO_TRAIN_FROM = 165
 
 def get_data(videos, y, frames_path):
 
     # TEST one frame only
-    frame = 72
     image_paths = [
         os.path.join(frames_path, video.split('.webm')[0] + '-frame-{}.jpg'.format(frame))
         for video in videos
-        # for frame in FRAME_NUMBERS
+        for frame in FRAME_NUMBERS
     ]
-    y_frames = y 
-    # y_frames = np.repeat(y, len(FRAME_NUMBERS)) 
+    # y_frames = y 
+    y_frames = np.repeat(y, len(FRAME_NUMBERS)) 
     print("[INFO] Images: {:,}, Scores {:,}...".format(len(image_paths), len(y_frames)))
 
     return image_paths, y_frames
@@ -70,15 +68,15 @@ class My_Generator(Sequence):
     def __getitem__(self, idx):
         batch_x = self.filenames[idx * self.batch_size:(idx + 1) * self.batch_size]
         batch_y = np.array(self.labels[idx * self.batch_size:(idx + 1) * self.batch_size])
-        batch_x_images = np.array([ resize(imread(file_name), (224, 224)) for file_name in batch_x])
-        # batch_x_images = []
-        # for image_path in batch_x:
-        #     image = load_img(image_path, target_size=(224, 224))
-        #     image = img_to_array(image)
-        #     image = imagenet_utils.preprocess_input(image)
-        #     # image = ((image / 255.) - means) / stds
-        #     batch_x_images.append(image)
-        # batch_x_images = np.array(batch_x_images)
+        # batch_x_images = np.array([ resize(imread(file_name), (224, 224)) for file_name in batch_x])
+        batch_x_images = []
+        for image_path in batch_x:
+            image = load_img(image_path, target_size=(224, 224))
+            image = img_to_array(image)
+            image = imagenet_utils.preprocess_input(image)
+            # image = ((image / 255.) - means) / stds
+            batch_x_images.append(image)
+        batch_x_images = np.array(batch_x_images)
         return batch_x_images, batch_y
 
 
@@ -108,7 +106,7 @@ def train_fine_tuned_cnn(train_videos, val_videos, y_train, y_val, frames_path):
 
         # Base Model
         print("[INFO] Defining base model...")
-        base_model = VGG16(
+        base_model = ResNet152(
             weights='imagenet', 
             include_top=False,
             input_tensor=Input(shape=(224, 224, 3)))
@@ -116,7 +114,7 @@ def train_fine_tuned_cnn(train_videos, val_videos, y_train, y_val, frames_path):
         # Head Model
         head_model = base_model.output
         head_model = Flatten(name="flatten")(head_model)
-        head_model = Dense(512, activation="relu")(head_model)
+        head_model = Dense(256, activation="relu")(head_model)
         head_model = Dropout(DROPOUT)(head_model)
         head_model = Dense(1, activation='sigmoid')(head_model)
 
@@ -140,8 +138,8 @@ def train_fine_tuned_cnn(train_videos, val_videos, y_train, y_val, frames_path):
         # layers to being non-trainable
         print("[INFO] Compiling model...")
         # Optimizer
-        # opt = SGD(lr=LEARNING_RATE)
-        opt = Adam(lr=LEARNING_RATE, decay=DECAY)
+        opt = SGD(lr=LEARNING_RATE)
+        # opt = Adam(lr=LEARNING_RATE, decay=DECAY)
         # opt = RMSprop(lr=LEARNING_RATE)
         model.compile(
             loss='mean_squared_error',
@@ -197,25 +195,25 @@ def train_fine_tuned_cnn(train_videos, val_videos, y_train, y_val, frames_path):
     )
 
     # one frame
-    predictions_frames_after_warmup = predictions_frames_after_warmup.flatten()
-    np.savetxt(os.path.join(config.RUN_LOG_DIR, 'predictions_frames_after_warmup.out'),
-        predictions_frames_after_warmup, delimiter=',')
-
-    print(predictions_frames_after_warmup)
-    
+    # predictions_frames_after_warmup = predictions_frames_after_warmup.flatten()
+    # np.savetxt(os.path.join(config.RUN_LOG_DIR, 'predictions_frames_after_warmup.out'),
+    #     predictions_frames_after_warmup, delimiter=',')
+    # print(predictions_frames_after_warmup)
     #### #### #### #### #### #### #### #### #### #### #### 
-    return predictions_frames_after_warmup
+    # return predictions_frames_after_warmup
     #### #### #### #### #### #### #### #### #### #### #### #### #### 
 
     # multiple frames
     # flatten vector
-    # predictions_frames_after_warmup = predictions_frames_after_warmup.flatten()
-    # # Average for each video 
-    # predictions_videos_after_warmup = np.mean(predictions_frames_after_warmup.reshape(-1, len(FRAME_NUMBERS)), axis=1)
-    # # save array as text
-    # np.savetxt(os.path.join(config.RUN_LOG_DIR, 'predictions_videos_after_warmup.out'),
-    #     predictions_videos_after_warmup, delimiter=',')
-    # return predictions_videos_after_warmup
+    predictions_frames_after_warmup = predictions_frames_after_warmup.flatten()
+    # Average for each video 
+    predictions_videos_after_warmup = np.mean(predictions_frames_after_warmup.reshape(-1, len(FRAME_NUMBERS)), axis=1)
+    # save array as text
+    np.savetxt(os.path.join(config.RUN_LOG_DIR, 'predictions_videos_after_warmup.out'),
+        predictions_videos_after_warmup, delimiter=',')
+    #### #### #### #### #### #### #### #### #### #### ####
+    return predictions_videos_after_warmup
+    #### #### #### #### #### #### #### #### #### #### ####
 
     # now that the head FC layers have been trained/initialized, lets
     # unfreeze the final set of CONV layers and make them trainable
