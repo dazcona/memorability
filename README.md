@@ -192,17 +192,31 @@ The top-4 classes predicted for this video frame are as follows:
 
 ## Learning Resources
 
+### MediaEval 2018
+
 * MediaEval 2018: http://multimediaeval.org/mediaeval2018/memorability/index.html
-* MediaEval 2018: Predicting Media Memorability: https://www.slideshare.net/multimediaeval/mediaeval-2018-predicting-media-memorability
+* Presentation at MediaEval 2018 - Predicting Media Memorability: https://www.slideshare.net/multimediaeval/mediaeval-2018-predicting-media-memorability
 * Proceedings of the MediaEval 2018 Workshop: http://ceur-ws.org/Vol-2283/
+
+### Regression: predicting a continous variable
+
 * Keras & Regression: https://www.pyimagesearch.com/2019/01/21/regression-with-keras/
-* GloVe: https://nlp.stanford.edu/projects/glove/
+* Keras custom metrics: https://machinelearningmastery.com/custom-metrics-deep-learning-keras-python/
+
+### Embeddings for processing video captions
+
+* Stanford's GloVe: https://nlp.stanford.edu/projects/glove/
 * Pre-trained word embeddings: https://github.com/keras-team/keras/blob/master/examples/pretrained_word_embeddings.py
 * https://blog.keras.io/using-pre-trained-word-embeddings-in-a-keras-model.html
 * https://towardsdatascience.com/machine-learning-word-embedding-sentiment-classification-using-keras-b83c28087456
-* Keras custom metrics: https://machinelearningmastery.com/custom-metrics-deep-learning-keras-python/
-* How to Train a Final Machine Learning Model: https://machinelearningmastery.com/train-final-machine-learning-model/
+
+### Custom generators and data augmentation
+
 * https://medium.com/the-artificial-impostor/custom-image-augmentation-with-keras-70595b01aeac
 * https://www.pyimagesearch.com/2018/12/24/how-to-use-keras-fit-and-fit_generator-a-hands-on-tutorial/
 * https://keras.io/utils/#sequence
 * https://medium.com/datadriveninvestor/keras-training-on-large-datasets-3e9d9dbc09d4
+
+### Training the final model
+
+* How to Train a Final Machine Learning Model: https://machinelearningmastery.com/train-final-machine-learning-model/
