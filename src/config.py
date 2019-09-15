@@ -15,7 +15,7 @@ FEATURES_WEIGHTS = {
     'InceptionV3': 0,
     'CAPTIONS': 0,
     'PRE-TRAINED NN': 0,
-    'FINE-TUNED NN': 1
+    'FINE-TUNED NN': 1,
 }
 # Number of folds for Cross-Validation
 NFOLDS = 10
@@ -41,14 +41,20 @@ FEATURES_ALGORITHM = {
     'InceptionV3': 'Bayesian Ridge',
     'CAPTIONS': 'SVM',
     'PRE-TRAINED NN': 'SVM',
-    'FINE-TUNED NN': 'Fine tuning from base model ResNet50',
+    'FINE-TUNED NN': 'Custom',
 }
 
 # Pre-trained CNN
 PRE_TRAINED_NN = 'ResNet152'
 
 # Fine-tunning CNN
-FINE_TUNED_MODEL = ''
+FINE_TUNED_MODEL = 'logs/run-2019-09-14_18-59-52/checkpoints/weights-part_1-43-0.0065387096.hdf5'
+FINE_TUNE_EVALUATE_ONLY = False
+# 'logs/run-2019-09-14_15-40-55/checkpoints/weights-part_0-01-0.0100537471.hdf5'
+# 'logs/run-2019-09-14_13-59-54/checkpoints/weights-part_0-01-0.0264736740.hdf5'
+# 'models/fine-tuning-warmup-one-frame-weights-fold_0-01-0.0271032082.hdf5'
+# 'models/fine-tuning-warmup-weights-fold_0-01-0.0264373418.hdf5' # 8 frames, 1 epoch, 0.25854 (p-value 0.00000)
+
 # 'checkpoints/run-2019-09-13_14-44-43/weights-fold_0-06-17.9225301506.hdf5'
 # 'checkpoints/run-2019-09-13_12-12-56/weights-fold_0-01-0.0247115156.hdf5'
 # 'checkpoints/run-2019-09-13_11-33-32/weights-fold_0-01-0.0275342398.hdf5'
@@ -70,8 +76,7 @@ RUN_NAME = datetime.datetime.now().strftime('run-%Y-%m-%d_%H-%M-%S')
 LOG_DIR = os.path.join(current_dir_path, '..', 'logs')
 RUN_LOG_DIR = os.path.join(LOG_DIR, RUN_NAME)
 RUN_LOG_FOLD_DIR = os.path.join(RUN_LOG_DIR, 'fold_{}')
-CHECKPOINT_DIR = os.path.join(current_dir_path, '..', 'checkpoints')
-RUN_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, RUN_NAME)
+RUN_CHECKPOINT_DIR = os.path.join(RUN_LOG_DIR, 'checkpoints')
 
 # DATA
 DATA_DIR = '/datasets'
