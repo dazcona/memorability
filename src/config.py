@@ -17,8 +17,6 @@ FEATURES_WEIGHTS = {
     'PRE-TRAINED NN': 0,
     'FINE-TUNED NN': 1,
 }
-# Number of folds for Cross-Validation
-NFOLDS = 10
 
 # Encoding Algorithms
 ENCODING_ALGORITHM = {
@@ -40,7 +38,7 @@ FEATURES_ALGORITHM = {
     'LBP': 'Bayesian Ridge',
     'InceptionV3': 'Bayesian Ridge',
     'CAPTIONS': 'SVM',
-    'PRE-TRAINED NN': 'SVM',
+    'PRE-TRAINED NN': 'Custom',
     'FINE-TUNED NN': 'Custom',
 }
 
@@ -48,8 +46,9 @@ FEATURES_ALGORITHM = {
 PRE_TRAINED_NN = 'ResNet152'
 
 # Fine-tunning CNN
-FINE_TUNED_MODEL = 'logs/run-2019-09-14_18-59-52/checkpoints/weights-part_1-43-0.0065387096.hdf5'
-FINE_TUNE_EVALUATE_ONLY = False
+FINE_TUNED_MODEL = 'logs/run-2019-09-15_18-06-35/checkpoints/weights-part_1-09-0.0068131643.hdf5'
+FINE_TUNE_EVALUATE_ONLY = True
+# 'logs/run-2019-09-14_18-59-52/checkpoints/weights-part_1-43-0.0065387096.hdf5'
 # 'logs/run-2019-09-14_15-40-55/checkpoints/weights-part_0-01-0.0100537471.hdf5'
 # 'logs/run-2019-09-14_13-59-54/checkpoints/weights-part_0-01-0.0264736740.hdf5'
 # 'models/fine-tuning-warmup-one-frame-weights-fold_0-01-0.0271032082.hdf5'
@@ -78,8 +77,11 @@ RUN_LOG_DIR = os.path.join(LOG_DIR, RUN_NAME)
 RUN_LOG_FOLD_DIR = os.path.join(RUN_LOG_DIR, 'fold_{}')
 RUN_CHECKPOINT_DIR = os.path.join(RUN_LOG_DIR, 'checkpoints')
 
+# HD
+HD_DIR = '/datasets'
+
 # DATA
-DATA_DIR = '/datasets'
+DATA_DIR = os.path.join(HD_DIR, 'memorability', 'campus.pub.ro')
 
 # DEV
 DEV_DIR = os.path.join(DATA_DIR, 'devset', 'dev-set')
@@ -90,7 +92,7 @@ DEV_CAPTIONS = os.path.join(DEV_DIR, 'dev-set_video-captions.txt')
 # DEV_CAPTIONS_2 = os.path.join(DEV_DIR, 'dev-set_video-captions2.txt')
 
 # EMBEDDINGS
-GLOVE_FILE = os.path.join('data', 'glove.6B.300d.txt')
+GLOVE_FILE = os.path.join(HD_DIR, 'glove', 'glove.6B.300d.txt')
 EMBEDDING_DIM = 300
 
 # FEATURES
@@ -128,6 +130,9 @@ DEV_SOURCES = os.path.join(DEV_DIR, 'sources') # 8,000 videos
 # FRAMES
 DEV_FRAMES = os.path.join(DEV_DIR, 'frames')
 DEV_NUMPY_FRAMES = os.path.join(DEV_DIR, 'npy_frames')
+
+# PROCESSED FEATURES
+MY_FEATURES_DIR = os.path.join(HD_DIR, 'processed')
 
 # TEST
 TEST_GROUNDTRUTH = os.path.join(DATA_DIR, 'testset', 'test-set_list.txt')

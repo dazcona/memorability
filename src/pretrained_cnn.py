@@ -1,5 +1,5 @@
 # import the necessary packages
-############ from keras.applications import VGG16, ResNet50, ResNet152, DenseNet121
+############ , , , 
 from keras.applications import imagenet_utils
 from keras.preprocessing.image import img_to_array
 from keras.preprocessing.image import load_img
@@ -12,43 +12,62 @@ from loader import data_load
 import h5py
 
 
-# Pre-trained Network model
-# NN_DICT = {
-#     'VGG16': {
-#         'model': VGG16(weights="imagenet", include_top=False, pooling='avg'),
-#         # 'size': 512 * 7 * 7,
-#         'size': 512, # if pooling is 'avg'
-#     },
-#     'ResNet50': {
-#         'model': ResNet50(weights="imagenet", include_top=False, pooling='avg'),
-#         # 'size': 2048 * 7 * 7 # if pooling is 'None'
-#         'size': 2048, # if pooling is 'avg'
-#     },
-#     'ResNet152': {
-#         'model': ResNet152(weights="imagenet", include_top=False, pooling='avg'),
-#         # 'size': 2048 * 7 * 7 # if pooling is 'None'
-#         'size': 2048, # if pooling is 'avg'
-#     },
-#     'DenseNet121': {
-#         'model': DenseNet121(weights="imagenet", include_top=False, pooling='avg'),
-#         'size': 1024, # if pooling is 'avg'
-#     },
-# }
 # Image Size to input the model
 IMG_SIZE=(224, 224)
 # frame numbers
 FRAME_NUMBERS = [1, 24, 48, 72, 96, 120, 144, 168]
 
 
+# Pre-trained Network model
+def get_model(model_name):
+
+    if model_name == 'VGG16':
+
+        from keras.applications import VGG16
+        model = VGG16(weights="imagenet", include_top=False, pooling='avg')
+        size = 512 # if pooling is 'avg', else  512 * 7 * 7 if pooling is 'None'
+
+    elif model_name == 'ResNet50':
+
+        from keras.applications import ResNet50
+        model = ResNet50(weights="imagenet", include_top=False, pooling='avg')
+        size = 2048, # if pooling is 'avg',  2048 * 7 * 7 if pooling is 'None'
+
+    elif model_name == 'ResNet152':
+
+        from keras.applications import ResNet152
+        model = ResNet152(weights="imagenet", include_top=False, pooling='avg')
+        size = 2048 # if pooling is 'avg', 2048 * 7 * 7 # if pooling is 'None'
+
+    elif model_name == 'DenseNet121':
+
+        from keras.applications import DenseNet121
+        model = DenseNet121(weights="imagenet", include_top=False, pooling='avg'),
+        size = 1024 # if pooling is 'avg'
+
+    elif model_name == 'Custom':
+
+        ## CUSTOM MODEL
+        
+        from keras.models import load_model
+        model = load_model(config.FINE_TUNED_MODEL)
+        size = 2048 # our trained models are based on ResNet152
+
+    else:
+
+        raise ValueError("Model needs to be defined. Examples: VGG16 or ResNet50.")
+
+    return model, size
+
+
 def get_features_from_last_layer_pretrained_nn(videos, frames_path, NN_name, train_val_or_test):
 
-    # Pre-trained NN available?
-    if NN_name not in NN_DICT:
-        raise ValueError("Network needs to be defined. Examples: VGG16 or ResNet50.")
+    # model and size
+    model, size = get_model(NN_name)
 
     # Output filename
     dev_or_test = frames_path.split(os.path.sep)[2] # devset or testset
-    h5_filename = 'features/{}_{}_{}.h5'.format(NN_name, dev_or_test, train_val_or_test)
+    h5_filename = '{}/{}_{}_{}.h5'.format(config.MY_FEATURES_DIR, NN_name, dev_or_test, train_val_or_test)
     
     # videos
     videos = list(videos)
@@ -63,10 +82,6 @@ def get_features_from_last_layer_pretrained_nn(videos, frames_path, NN_name, tra
             for video in videos
             for frame in FRAME_NUMBERS
         ]
-
-        # model and size
-        model = NN_DICT[NN_name]['model']
-        size = NN_DICT[NN_name]['size']
 
         # initialize the progress bar
         widgets = ["Extracting Features: ", progressbar.Percentage(), " ", progressbar.Bar(), " ", progressbar.ETA()]

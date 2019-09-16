@@ -49,7 +49,7 @@ def get_video_features(feature_name):
     video_filenames = os.listdir(videos_path)
 
     # CSV features file
-    csv_features_filename = 'features/{}_train_val.csv'.format(feature_name)
+    csv_features_filename = '{}/{}_train_val.csv'.format(config.MY_FEATURES_DIR, feature_name)
     if not os.path.isfile(csv_features_filename):
         # Create it
         print('[INFO] Creating {}...'.format(csv_features_filename))
