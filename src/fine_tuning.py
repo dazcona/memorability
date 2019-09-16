@@ -16,6 +16,10 @@ import config
 from keras.models import load_model
 # import pdb; pdb.set_trace()
 
+## LOGDIR
+
+MAIN_LOG = os.path.join(config.RUN_LOG_DIR, 'mainlog.txt')
+
 # from tensorflow.python import debug as tf_debug
 # import keras
 # sess = keras.backend.get_session()
@@ -33,7 +37,7 @@ IMG_SIZE = (224, 224)
 LEARNING_RATE_WARMUP = 1e-2
 EPOCHS_WARMUP = 1
 
-LAYER_TO_TRAIN_FROM = 473
+LAYER_TO_TRAIN_FROM = 453
 LEARNING_RATE = 1e-2
 EPOCHS = 10
 DECAY = LEARNING_RATE / EPOCHS
@@ -155,6 +159,9 @@ def train_base_model(my_training_batch_generator, my_validation_batch_generator)
     for layer in base_model.layers:
         layer.trainable = False
 
+    with open(MAIN_LOG, 'a') as f:
+        print("Base model's layers are frozen", file=f)
+
     print("[INFO] Model layers...")
     for (i, layer) in enumerate(model.layers):
         print("[INFO] {}\t{}\t{}".format(i, layer.__class__.__name__, layer.trainable))
@@ -172,6 +179,10 @@ def train_base_model(my_training_batch_generator, my_validation_batch_generator)
         optimizer=opt,
         metrics=['mse', 'mae', 'mape'],
     )
+
+    with open(MAIN_LOG, 'a') as f:
+        print('Optimizer: {}, LR: {:.2f}'.format('SDG', LEARNING_RATE_WARMUP), file=f)
+
 
     # train the head of the network for a few epochs (all other
     # layers are frozen) -- this will allow the new FC layers to
@@ -214,30 +225,29 @@ def evaluate_model(model, my_validation_batch_generator):
 
     # evaluate the network after initialization
     print("[INFO] Predicting values after head warm up...")
-    predictions_frames_after_warmup = model.predict_generator(
+    preds_frames = model.predict_generator(
         my_validation_batch_generator, 
         #steps=NUM_VALIDATION_SAMPLES // batch_size
     )
 
     # one frame
-    # predictions_frames_after_warmup = predictions_frames_after_warmup.flatten()
-    # np.savetxt(os.path.join(config.RUN_LOG_DIR, 'predictions_frames_after_warmup.out'),
-    #     predictions_frames_after_warmup, delimiter=',')
-    # print(predictions_frames_after_warmup)
+    # preds_frames = preds_frames.flatten()
+    # np.savetxt(os.path.join(config.RUN_LOG_DIR, 'preds_frames.out'),
+    #     preds_frames, delimiter=',')
+    # print(preds_frames)
     ### #### #### #### #### #### #### #### #### #### #### 
-    # return predictions_frames_after_warmup
+    # return preds_frames
     ### #### #### #### #### #### #### #### #### #### #### #### #### 
 
-    # # multiple frames
-    # # flatten vector
-    predictions_frames_after_warmup = predictions_frames_after_warmup.flatten()
-    # Average for each video
-    predictions_videos_after_warmup = np.mean(predictions_frames_after_warmup.reshape(-1, len(FRAME_NUMBERS)), axis=1)
+    # Predictions for each video: average of the frames' predictions for each video
+    preds_frames = preds_frames.flatten()
+    # average for each video
+    preds_videos = np.mean(preds_frames.reshape(-1, len(FRAME_NUMBERS)), axis=1)
     # save array as text
-    np.savetxt(os.path.join(config.RUN_LOG_DIR, 'predictions_videos_after_warmup.out'),
-        predictions_videos_after_warmup, delimiter=',')
+    np.savetxt(os.path.join(config.RUN_LOG_DIR, 'preds_videos.out'),
+        preds_videos, delimiter=',')
 
-    return predictions_videos_after_warmup
+    return preds_videos
 
 
 def train_from_base_model(model, my_training_batch_generator, my_validation_batch_generator):
@@ -249,6 +259,10 @@ def train_from_base_model(model, my_training_batch_generator, my_validation_batc
     # unfreeze the final set of CONV layers and make them trainable
     for layer in model.layers[LAYER_TO_TRAIN_FROM:]:
         layer.trainable = True
+
+    with open(MAIN_LOG, 'a') as f:
+        print('Layer to train it from: {}'.format(LAYER_TO_TRAIN_FROM), file=f)
+
 
     # loop over the layers in the network and display them to the console
     print("[INFO] Model layers...")
@@ -265,6 +279,9 @@ def train_from_base_model(model, my_training_batch_generator, my_validation_batc
         optimizer=opt,
         metrics=['mse', 'mae', 'mape'],
     )
+
+    with open(MAIN_LOG, 'a') as f:
+        print('Optimizer: {}, LR: {:.2f}'.format('SGD', LEARNING_RATE), file=f)
 
     # ...
     print("[INFO] Fine-tuning model...")
