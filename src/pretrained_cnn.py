@@ -39,6 +39,12 @@ def get_model(model_name):
         model = ResNet152(weights="imagenet", include_top=False, pooling='avg')
         size = 2048 # if pooling is 'avg', 2048 * 7 * 7 # if pooling is 'None'
 
+    elif model_name == 'ResNet152V2':
+
+        from keras.applications import ResNet152V2
+        model = ResNet152V2(weights="imagenet", include_top=False, pooling='avg')
+        size = 2048 # if pooling is 'avg', 2048 * 7 * 7 # if pooling is 'None'
+
     elif model_name == 'DenseNet121':
 
         from keras.applications import DenseNet121
@@ -48,7 +54,7 @@ def get_model(model_name):
     elif model_name == 'Custom':
 
         ## CUSTOM MODEL
-        
+
         from keras.models import load_model
         model = load_model(config.FINE_TUNED_MODEL)
         size = 2048 # our trained models are based on ResNet152
@@ -66,18 +72,18 @@ def get_features_from_last_layer_pretrained_nn(videos, frames_path, NN_name, tra
     model, size = get_model(NN_name)
 
     # Output filename
-    dev_or_test = frames_path.split(os.path.sep)[2] # devset or testset
+    dev_or_test = frames_path.split(os.path.sep)[-3] # devset or testset
     h5_filename = '{}/{}_{}_{}.h5'.format(config.MY_FEATURES_DIR, NN_name, dev_or_test, train_val_or_test)
-    
+
     # videos
     videos = list(videos)
 
     if not os.path.isfile(h5_filename):
 
         print('[INFO] Creating features for pre-trained model...')
-        
+
         # images
-        image_paths = [ 
+        image_paths = [
             os.path.join(frames_path, video.split('.webm')[0] + '-frame-{}.jpg'.format(frame))
             for video in videos
             for frame in FRAME_NUMBERS
@@ -89,17 +95,17 @@ def get_features_from_last_layer_pretrained_nn(videos, frames_path, NN_name, tra
 
         batch_size = 32
 
-        with h5py.File(h5_filename, 'w') as h5f: 
+        with h5py.File(h5_filename, 'w') as h5f:
 
             # loop over the images in batches
             for i in np.arange(0, len(image_paths), batch_size):
-                
+
                 batch_paths = image_paths[i:i + batch_size]
                 batch_images = []
 
                 # loop over the images in the current batch
                 for image_path in batch_paths:
-                    
+
                     # load the input image using the Keras helper utility
                     # while ensuring the image is resized to 224x224 pixels
                     image = load_img(image_path, target_size=IMG_SIZE)
@@ -120,7 +126,7 @@ def get_features_from_last_layer_pretrained_nn(videos, frames_path, NN_name, tra
                 features = features.reshape((features.shape[0], size))
 
                 # add features per image
-                for feature_index, batch_index in zip(np.arange(0, features.shape[0], len(FRAME_NUMBERS)), 
+                for feature_index, batch_index in zip(np.arange(0, features.shape[0], len(FRAME_NUMBERS)),
                                                     np.arange(i, i + len(FRAME_NUMBERS))):
                     # Concatenate all features per frame to one
                     image_features = np.concatenate( features[feature_index:feature_index + len(FRAME_NUMBERS)] )
