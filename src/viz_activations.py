@@ -84,7 +84,7 @@ def get_image_activations(image_path):
     heatmap = np.maximum(heatmap, 0)
     heatmap /= np.max(heatmap)
     # plt.matshow(heatmap)
-    plt.imsave('output/{}_heatmap.png'.format(image_name), heatmap)
+    plt.imsave('figures/activation_maps/{}_heatmap.png'.format(image_name), heatmap)
 
     # Uses cv2 to load the original image
     img = cv2.imread(image_path)
@@ -97,20 +97,20 @@ def get_image_activations(image_path):
     # 0.4 here is a heatmap intensity factor
     superimposed_img = heatmap * 0.4 + img
     # Saves the image
-    cv2.imwrite('output/{}_CAM.jpg'.format(image_name), superimposed_img)
+    cv2.imwrite('figures/activation_maps/{}_CAM.jpg'.format(image_name), superimposed_img)
 
 
-# construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-m", "--model_name", required=True, help="model to be used")
-args = vars(ap.parse_args())
-model_name = args["model_name"]
-print('[INFO] Model name: {}...'.format(model_name))
-
-for image_path in os.listdir(config.FRAME_SAMPLES):
-    # Get image path
-    filename = os.path.join(config.FRAME_SAMPLES, image_path)
-    print(filename)
-    # Process image
-    get_image_activations(filename)
+if __name__ == "__main__":
+    # construct the argument parse and parse the arguments
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-m", "--model_name", required=True, help="model to be used")
+    args = vars(ap.parse_args())
+    model_name = args["model_name"]
+    print('[INFO] Model name: {}...'.format(model_name))
+    for image_path in os.listdir(config.FRAME_SAMPLES):
+        # Get image path
+        filename = os.path.join(config.FRAME_SAMPLES, image_path)
+        print(filename)
+        # Process image
+        get_image_activations(filename)
 

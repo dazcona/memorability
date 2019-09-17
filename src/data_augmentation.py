@@ -12,38 +12,10 @@ def run_data_augmentation():
 
     print("[INFO] Data augmentation...")
 
-    # filename = '/datasets/devset/dev-set/frames/video5587-frame-48.jpg'
-
-    # image = load_img(filename)
-    # image = img_to_array(image)
-    # image = np.expand_dims(image, axis=0)
-
-    # aug = ImageDataGenerator(
-    #     rotation_range=30, 
-    #     width_shift_range=0.1,
-    #     height_shift_range=0.1, 
-    #     shear_range=0.2, 
-    #     zoom_range=0.2,
-    #     horizontal_flip=True, 
-    #     fill_mode="nearest")
-
-    # image_generator = aug.flow(
-    #     image,
-    #     batch_size=1,
-    #     save_to_dir='aug_samples',
-    #     save_prefix='augmenting_',
-    #     save_format='jpg'
-    # )
-    
-    # total = 0
-    # for images in image_generator:
-    #     total += 1
-    #     if total == 10:
-    #         break
-
+    # open image
     filename = '/datasets/devset/dev-set/frames/video5597-frame-48.jpg'
     image = plt.imread(filename)
-    print(image.shape)
+    print('Image: {}, Shape: {}'.format(filename, image.shape))
     plt.imsave('aug_samples/image.png', image)
     paths = [
         filename,
