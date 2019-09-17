@@ -38,7 +38,6 @@ np.random.seed(42)
 
 with open(MAIN_LOG, 'w') as f:
     print("""MEMORABILITY 2019
-SPLIT APPROACH
 TARGET: {}
 FEATURES_WEIGHTS: {}
 FEATURES_ALGORITHM: {}""".format(config.TARGET,
