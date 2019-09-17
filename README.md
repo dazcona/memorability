@@ -40,7 +40,7 @@ $ wget -m --ftp-user="<user>" --ftp-password=<password> ftp://<ftp server>
 ```
 and unzip multi-part files like [here](http://koenaerts.ca/unzip-multi-part-archives-in-linux/):
 ```
-$ zip --fix me18me-devset.zip --output mybigzipfile.zip
+$ zip --fix me18me-devset.zip --figures/activation_maps mybigzipfile.zip
 $ unzip mybigzipfile.zip
 ```
 
@@ -71,11 +71,16 @@ $ make dev
 $ python src/extract_frames.py
 ```
 
+6. Extract emotion features from frames:
+```
+$ python src/extract_emotions.py
+```
+
 7. Modify the file *src/config.py* to run the desired experiment:
 
 8. Run the training:
 ```
-$ python src/workflow_split.py
+$ python src/train.py
 ```
 
 9. [Optional] Visualizing heatmaps of class activation:
@@ -97,7 +102,7 @@ The top-4 classes predicted for this video frame are as follows:
 * 'crutch': 0.0654099 (with 6.54% probability)
 * 'pedestal': 0.06340647 (with 6.34% probability)
 
-![](output/video798-frame-48_CAM.jpg)
+![](figures/activation_maps/video798-frame-48_CAM.jpg)
 
 2. **video1981.webm**
 
@@ -108,7 +113,7 @@ The top-4 classes predicted for this video frame are as follows:
 * 'theater_curtain': 0.00067173946
 * 'groom': 0.00034087678
 
-![](output/video1981-frame-48_CAM.jpg)
+![](figures/activation_maps/video1981-frame-48_CAM.jpg)
 
 3. **video4903.webm**
 
@@ -119,7 +124,7 @@ The top-4 classes predicted for this video frame are as follows:
 * 'monitor': 0.05998577
 * 'notebook': 0.040473375
 
-![](output/video4903-frame-48_CAM.jpg)
+![](figures/activation_maps/video4903-frame-48_CAM.jpg)
 
 4. **video9496.webm**
 
@@ -129,7 +134,7 @@ The top-4 classes predicted for this video frame are as follows:
 * 'wreck': 0.028257731
 * 'volcano': 0.017195351
 
-![](output/video9496-frame-48_CAM.jpg)
+![](figures/activation_maps/video9496-frame-48_CAM.jpg)
 
 5. **video6103.webm**
 
@@ -138,7 +143,7 @@ The top-4 classes predicted for this video frame are as follows:
 * 'ski_mask': 0.024773473
 * 'lab_coat': 0.016840363
 
-![](output/video6103-frame-48_CAM.jpg)
+![](figures/activation_maps/video6103-frame-48_CAM.jpg)
 
 ### Top long-term most memorable videos
 
@@ -149,7 +154,7 @@ The top-4 classes predicted for this video frame are as follows:
 * 'unicycle': 0.009558631
 * 'alp': 0.0027272117
 
-![](output/video5186-frame-48_CAM.jpg)
+![](figures/activation_maps/video5186-frame-48_CAM.jpg)
 
 2. **video4798.webm**
 
@@ -159,7 +164,7 @@ The top-4 classes predicted for this video frame are as follows:
 * 'wardrobe': 0.026173087
 * 'prison': 0.025266951
 
-![](output/video4798-frame-48_CAM.jpg)
+![](figures/activation_maps/video4798-frame-48_CAM.jpg)
 
 3. **video480.webm**
 
@@ -170,7 +175,7 @@ The top-4 classes predicted for this video frame are as follows:
 * 'Lakeland_terrier': 0.033769395
 * 'standard_schnauzer': 0.030899713
 
-![](output/video480-frame-48_CAM.jpg)
+![](figures/activation_maps/video480-frame-48_CAM.jpg)
 
 4. **video7606.webm**
 
@@ -180,7 +185,7 @@ The top-4 classes predicted for this video frame are as follows:
 * 'paintbrush': 0.04958201
 * 'shovel': 0.031757597
 
-![](output/video7606-frame-48_CAM.jpg)
+![](figures/activation_maps/video7606-frame-48_CAM.jpg)
 
 5. **video4809.webm**
 
@@ -188,7 +193,7 @@ The top-4 classes predicted for this video frame are as follows:
 * 'tennis_ball': 0.0032226138
 * 'ping-pong_ball': 0.00037128705
 
-![](output/video4809-frame-48_CAM.jpg)
+![](figures/activation_maps/video4809-frame-48_CAM.jpg)
 
 ## Learning Resources
 
