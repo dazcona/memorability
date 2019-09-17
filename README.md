@@ -88,6 +88,17 @@ $ python src/train.py
 $ python src/viz_activations.py --model ResNet152
 ```
 
+## EDA: Exploring features & captions
+
+1. **Short-term and long-term memorability histograms**
+![](figures/EDA/Exploring_Short_and_Long_Memorability_histograms.png)
+
+2. **Exploring top captions**
+![](figures/EDA/Exploring_Wordclouds_Top_50_Videos_Captions.png)
+
+3. **Exploring bottom captions**
+![](figures/EDA/Exploring_Wordclouds_Bottom_50_Videos_Captions.png)
+
 ## Visualization: Activation Maps
 
 Model ResNet152 trained with ImageNet was leveraged for the video-frame 48 of the top short-term and long-term most memorable videos. This is very useful for understanding which parts of these given images led the pre-trained CNN to the ImageNet classification. This technique is called *class activation map* (CAM) visualization and consists of producing heatmaps of class activation over input images. For further details see Francois Chollet's Deep Learning with Python book.
