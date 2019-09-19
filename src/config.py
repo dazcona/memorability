@@ -2,7 +2,8 @@ import os
 import datetime
 
 # Column to predict
-TARGET = 'short-term_memorability'
+TARGET_SHORT_NAME = 'long' # 'short' or 'long'
+TARGET = '{}-term_memorability'.format(TARGET_SHORT_NAME)
 # Target columns
 TARGET_COLS = [ 'short-term_memorability', 'nb_short-term_annotations', 'long-term_memorability', 'nb_long-term_annotations' ]
 # Dictionary that indicates which data sources to use in the model and its weight on the overall ensemble model
@@ -13,19 +14,12 @@ FEATURES_WEIGHTS = {
     'ColorHistogram': 0,
     'LBP': 0,
     'InceptionV3': 0,
-    'CAPTIONS': 0,
+    'CAPTIONS': 1,
     'PRE-TRAINED NN': 0,
-    'FINE-TUNED NN': 1,
+    'FINE-TUNED NN': 0,
+    'Emotions': 0,
+    'Our_Aesthetics': 0,
 }
-
-# Encoding Algorithms
-ENCODING_ALGORITHM = {
-    'CAPTIONS': 'EMBEDDINGS' # TFIDF or EMBEDDINGS
-}
-# Train embeddings
-EMBEDDINGS_TRAINING = False
-# Model's path
-EMBEDDINGS_MODEL = 'checkpoints/run-2019-09-03_16-40-09/weights-fold_0-97-0.0051547588.hdf5'
 
 # GRID SEARCH
 GRID_SEARCH = False
@@ -38,16 +32,34 @@ FEATURES_ALGORITHM = {
     'LBP': 'Bayesian Ridge',
     'InceptionV3': 'Bayesian Ridge',
     'CAPTIONS': 'SVM',
-    'PRE-TRAINED NN': 'Custom',
+    'PRE-TRAINED NN': 'SVM',
     'FINE-TUNED NN': 'Custom',
+    'Emotions': 'Bayesian Ridge',
+    'Our_Aesthetics': 'SVM',
 }
 
-# Pre-trained CNN
-PRE_TRAINED_NN = 'ResNet152'
+# EMBEDDINGS
+# Encoding Algorithms
+ENCODING_ALGORITHM = {
+    'CAPTIONS': 'EMBEDDINGS' # TFIDF or EMBEDDINGS
+}
+# Train embeddings
+EMBEDDINGS_TRAINING = True
+# Model's path
+EMBEDDINGS_MODEL = '' 
+# 'logs/run-2019-09-16_16-10-58/checkpoints/weights-fold_0-23-0.0203232624.hdf5'
+# long-term: 'logs/run-2019-09-16_16-10-58/checkpoints/weights-fold_0-23-0.0203232624.hdf5'
+# short-term: 'checkpoints/run-2019-09-03_16-40-09/weights-fold_0-97-0.0051547588.hdf5'
 
-# Fine-tunning CNN
-FINE_TUNED_MODEL = 'logs/run-2019-09-15_18-06-35/checkpoints/weights-part_1-09-0.0068131643.hdf5'
+# PRE-TRAINED CNN
+PRE_TRAINED_NN = 'DenseNet121'
+
+# FINE-TUNED CNN
 FINE_TUNE_EVALUATE_ONLY = True
+FINE_TUNED_MODEL = 'logs/run-2019-09-18_12-42-36/checkpoints/weights-part_1-01-0.0223143869.hdf5'
+# 'logs/run-2019-09-18_09-51-01/checkpoints/weights-part_1-02-0.0229876925.hdf5'
+# 'logs/run-2019-09-17_23-20-46/checkpoints/weights-part_0-01-0.0220884897.hdf5'
+# 'logs/run-2019-09-16_23-38-20/checkpoints/weights-part_1-29-0.0068147990.hdf5'
 # 'logs/run-2019-09-14_18-59-52/checkpoints/weights-part_1-43-0.0065387096.hdf5'
 # 'logs/run-2019-09-14_15-40-55/checkpoints/weights-part_0-01-0.0100537471.hdf5'
 # 'logs/run-2019-09-14_13-59-54/checkpoints/weights-part_0-01-0.0264736740.hdf5'
@@ -64,8 +76,13 @@ FINE_TUNE_EVALUATE_ONLY = True
 # 'checkpoints/run-2019-09-11_17-55-01/weights-fold_0-08-0.0069531268.hdf5'
 # 'logs/run-2019-09-11_17-55-01/fine_tuning_model_after_warmup.h5'
 
+EMOTIONS_NN = True
+EMOTIONS_MODEL = 'logs/run-2019-09-19_14-26-02/checkpoints/emotions-weights-fold_0-13-0.0458815261.hdf5'
+# 'logs/run-2019-09-18_12-29-21/checkpoints/emotions-weights-fold_0-270-0.0163350874.hdf5'
+# 'logs/run-2019-09-18_12-08-36/checkpoints/emotions-weights-fold_0-111-0.0163384946.hdf5'
+
 # EPOCHS
-NUM_EPOCHS = 100
+# NUM_EPOCHS = 100
 
 # CURRENT DIR
 current_dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -91,7 +108,7 @@ DEV_GROUNDTRUTH = os.path.join(DEV_DIR, 'ground-truth', 'ground-truth_dev-set.cs
 DEV_CAPTIONS = os.path.join(DEV_DIR, 'dev-set_video-captions.txt')
 # DEV_CAPTIONS_2 = os.path.join(DEV_DIR, 'dev-set_video-captions2.txt')
 
-# EMBEDDINGS
+# PRE-TRAINED EMBEDDINGS
 GLOVE_FILE = os.path.join(HD_DIR, 'glove', 'glove.6B.300d.txt')
 EMBEDDING_DIM = 300
 
@@ -122,6 +139,8 @@ FEATURES_DIM = {
 }
 # First, Middle and Last frames
 THREE_FRAMES = [0, 56, 112]
+# 8 frames: one per second
+FRAME_NUMBERS = [1, 24, 48, 72, 96, 120, 144, 168]
 
 # SOURCES
 DEV_SOURCES = os.path.join(DEV_DIR, 'sources') # 8,000 videos
@@ -143,8 +162,15 @@ TEST_FEATURES_LIST = ['C3D', 'HMP', 'InceptionV3', 'LBP', 'Aesthetics', 'ColorHi
 TEST_SOURCES = os.path.join(TEST_DIR, 'sources') # 2,000 videos
 TEST_FRAMES = os.path.join(TEST_DIR, 'frames')
 
-# ONLY RUN ONCE
-ONLY_RUN_ONE_FOLD_CV = True
-
 # SOME FRAMES
-FRAME_SAMPLES = 'frame_samples/'
+FRAME_SAMPLES = 'figures/frame_samples/'
+
+# MY FEATURES
+# EMOTIONS
+EMOTIONS_DIR = os.path.join(HD_DIR, 'emotions')
+EMOTIONS_DEV = os.path.join(EMOTIONS_DIR, 'devset')
+EMOTIONS_TEST = os.path.join(EMOTIONS_DIR, 'testset')
+# AESTHETICS
+OUR_AESTHETICS_DIR = os.path.join(HD_DIR, 'feiyan_aesthetics')
+OUR_AESTHETICS_DEV = os.path.join(OUR_AESTHETICS_DIR, 'aesthetic_feature_dev')
+OUR_AESTHETICS_TEST = os.path.join(OUR_AESTHETICS_DIR, 'aesthetic_feature_test')

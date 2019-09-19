@@ -35,12 +35,12 @@ IMG_SIZE = (224, 224)
 
 # Hyperparameters
 LEARNING_RATE_WARMUP = 1e-2
-EPOCHS_WARMUP = 1
+EPOCHS_WARMUP = 5
 
-LAYER_TO_TRAIN_FROM = 453
+# LAYER_TO_TRAIN_FROM = 453
 LEARNING_RATE = 1e-2
-EPOCHS = 10
-DECAY = LEARNING_RATE / EPOCHS
+EPOCHS = 5
+# DECAY = LEARNING_RATE / EPOCHS
 
 
 def get_data(videos, y, frames_path):
@@ -147,7 +147,8 @@ def train_base_model(my_training_batch_generator, my_validation_batch_generator)
     head_model = base_model.output
     head_model = Flatten(name="flatten")(head_model)
     head_model = Dense(256, activation="relu")(head_model)
-    head_model = Dropout(0.5)(head_model)
+    # head_model = Dropout(0.5)(head_model)
+    head_model = Dropout(0.75)(head_model)
     head_model = Dense(1, activation='sigmoid')(head_model)
 
     # Combine models
@@ -181,7 +182,7 @@ def train_base_model(my_training_batch_generator, my_validation_batch_generator)
     )
 
     with open(MAIN_LOG, 'a') as f:
-        print('Optimizer: {}, LR: {:.2f}'.format('SDG', LEARNING_RATE_WARMUP), file=f)
+        print('Optimizer: {}, LR: {}'.format('SDG', LEARNING_RATE_WARMUP), file=f)
 
 
     # train the head of the network for a few epochs (all other
@@ -257,11 +258,15 @@ def train_from_base_model(model, my_training_batch_generator, my_validation_batc
 
     # now that the head FC layers have been trained/initialized, lets
     # unfreeze the final set of CONV layers and make them trainable
-    for layer in model.layers[LAYER_TO_TRAIN_FROM:]:
-        layer.trainable = True
+    
+    ############################################################################
+    #### TEST
+    # for layer in model.layers[LAYER_TO_TRAIN_FROM:]:
+    #     layer.trainable = True
 
-    with open(MAIN_LOG, 'a') as f:
-        print('Layer to train it from: {}'.format(LAYER_TO_TRAIN_FROM), file=f)
+    # with open(MAIN_LOG, 'a') as f:
+    #     print('Layer to train it from: {}'.format(LAYER_TO_TRAIN_FROM), file=f)
+    ############################################################################
 
 
     # loop over the layers in the network and display them to the console

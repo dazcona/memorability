@@ -37,12 +37,14 @@ BEST_MODEL = {
         'LBP': BayesianRidge(lambda_2=0.1, alpha_1=0.1, alpha_2=1e-06, normalize=False, lambda_1=1e-06),
         'InceptionV3': BayesianRidge(),
         'CAPTIONS': SVR(gamma='scale'),
-        'ResNet50': SVR(gamma='scale'),
+        'ResNet50': SVR(gamma='scale', kernel='rbf', C=0.1, epsilon=0.001),
         'ResNet152': SVR(kernel='rbf', C=0.1, epsilon=0.001, gamma='scale'),
         'ResNet152V2': SVR(gamma='scale'),
+        'Emotions': BayesianRidge(),
+        'Our_Aesthetics': BayesianRidge(),
     },
     'long-term_memorability' : {
-        'C3D': SVR(C=1.0, kernel='rbf', epsilon=0.001, gamma='scale'),
+        'C3D': BayesianRidge(lambda_2=0.0001, alpha_1=1e-06, alpha_2=0.1, normalize=False, lambda_1=0.1),
         'AESTHETICS': BayesianRidge(lambda_2=1e-06, alpha_1=1e-06, alpha_2=0.1, normalize=True, lambda_1=0.1),
         'HMP': SVR(kernel='linear', epsilon=0.001, C=100.0, gamma='scale'),
         'ColorHistogram': BayesianRidge(lambda_2=0.0001, alpha_1= 1e-06, alpha_2=0.1, normalize=True, lambda_1=0.1),
@@ -52,6 +54,8 @@ BEST_MODEL = {
         'ResNet50': SVR(kernel='rbf', C=0.1, epsilon=0.001, gamma='scale'),
         'ResNet152': SVR(kernel='rbf', C=0.1, epsilon=0.001, gamma='scale'),
         'ResNet152V2': SVR(gamma='scale'),
+        'Emotions': BayesianRidge(lambda_2=0.0001, alpha_1=1e-06, alpha_2=0.1, normalize=True, lambda_1=0.1),
+        'Our_Aesthetics': BayesianRidge(),
     },
 }
 CV = 3

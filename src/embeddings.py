@@ -5,12 +5,13 @@ import config
 from loader import load_pretrained_word_vectors
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from keras.layers import Embedding, Input, GRU, Dense
+from keras.layers import Embedding, Input, GRU, Dense, MaxPooling1D, Conv1D
 from keras.initializers import Constant
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.callbacks import TensorBoard, ModelCheckpoint
 from keras.models import load_model
+from keras import regularizers
 import matplotlib.pyplot as plt
 # import keras.backend as K
 
@@ -19,7 +20,7 @@ NUM_UNITS = 64
 DROPOUT = 0.75
 RECURRENT_DROPOUT = 0.75
 LEARNING_RATE = 1e-3
-NUM_EPOCHS = 200
+NUM_EPOCHS = 1000
 DECAY = 1e-3 / NUM_EPOCHS
 
 
@@ -89,7 +90,18 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
 
         sequence_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
         embedded_sequences = embedding_layer(sequence_input)
-        x = GRU(units=NUM_UNITS, dropout=DROPOUT, recurrent_dropout=RECURRENT_DROPOUT)(embedded_sequences)
+        x = GRU(
+            units=NUM_UNITS, 
+            dropout=DROPOUT, 
+            recurrent_dropout=RECURRENT_DROPOUT,
+            # return_sequences=True,
+        )(embedded_sequences)
+        # x = GRU(
+        #     units=NUM_UNITS, 
+        #     dropout=DROPOUT, 
+        #     recurrent_dropout=RECURRENT_DROPOUT,
+        #     return_sequences=False,
+        # )(x)
         preds = Dense(1, activation='sigmoid')(x)
         model = Model(sequence_input, preds)
 
@@ -126,6 +138,8 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
             epochs=NUM_EPOCHS,
             shuffle=False,
             batch_size=32,
+            use_multiprocessing=True,
+            workers=8,
             callbacks=[
                 tensorboard,
                 checkpoints,
