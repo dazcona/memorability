@@ -44,10 +44,11 @@ ENCODING_ALGORITHM = {
     'CAPTIONS': 'EMBEDDINGS' # TFIDF or EMBEDDINGS
 }
 # Train embeddings
-EMBEDDINGS_TRAINING = True
+EMBEDDINGS_TRAINING = False
 # Model's path
 EMBEDDINGS_MODEL = {
-    'short': 'logs/run-2019-09-20_17-11-45/checkpoints/weights-fold_0-79-0.0048722358.hdf5',
+    # 'short': 'logs/run-2019-09-20_17-11-45/checkpoints/weights-fold_0-79-0.0048722358.hdf5',
+    'short': '/datasets/previous_runs/checkpoints/run-2019-09-03_16-40-09/weights-fold_0-97-0.0051547588.hdf5',
     'long': 'logs/run-2019-09-19_17-03-42/checkpoints/weights-fold_0-188-0.0198000782.hdf5'
 }
 # 'logs/run-2019-09-19_16-42-25/checkpoints/weights-fold_0-47-0.0197818204.hdf5' 

@@ -1,4 +1,5 @@
 import os
+import config
 import numpy as np
 from loader import data_load
 from sklearn.model_selection import train_test_split
@@ -17,7 +18,7 @@ if __name__ == "__main__":
 
     ## LOAD DATA
 
-    target = 'long-term_memorability'
+    target = 'short-term_memorability'
     print("[INFO] Target: {}".format(target))
 
     print('[INFO] Loading data...')
@@ -32,7 +33,7 @@ if __name__ == "__main__":
         'PRE-TRAINED NN': 0,
         'FINE-TUNED NN': 0,
         'Emotions': 0,
-    })
+    }, config.DEV_GROUNDTRUTH, config.DEV_CAPTIONS, config.DEV_FEATURES_PATH, 'train_val')
 
     X = dataframe.drop(columns=[ 'short-term_memorability', 'nb_short-term_annotations', 'long-term_memorability', 'nb_long-term_annotations' ])
     Y = dataframe[target]
@@ -49,32 +50,35 @@ if __name__ == "__main__":
     print('[INFO] Number of training samples: {}'.format(len(X_train)))
     print('[INFO] Number of validation samples: {}'.format(len(X_val)))
 
-    yoyo = [
-        'short-term_memorability_LBP.npy',
-        'short-term_memorability_C3D.npy',
-        'short-term_memorability_HMP.npy',
-        'short-term_memorability_captions_embeddings.npy',
-        'short-term_memorability_pretrained_ResNet152.npy', 
-        'short-term_memorability_our_aesthetics_BR.npy',
-        'short-term_memorability_emotions_ML.npy',
-    ]
-    # Removed: 'short-term_memorability_pretrained_ResNet50.npy', 'short-term_memorability_AESTHETICS.npy',
-    my_filenames = [
-        'long-term_memorability_HMP.npy',
-        'long-term_memorability_C3D.npy',
-        'long-term_memorability_LBP.npy',
-        'long-term_memorability_captions_embeddings.npy',
-        'long-term_memorability_pretrained_ResNet152.npy',
-        'long-term_memorability_our_aesthetics_BR.npy',
-        'long-term_memorability_emotions_ML.npy',
-    ]
+    my_filenames = {
+        'short-term_memorability': [
+            'short-term_memorability_LBP.npy',
+            'short-term_memorability_C3D.npy',
+            'short-term_memorability_HMP.npy',
+            'short-term_memorability_captions_embeddings.npy',
+            'short-term_memorability_pretrained_ResNet152.npy',
+            'short-term_memorability_our_aesthetics_BR.npy',
+            'short-term_memorability_emotions_ML.npy',
+        ],
+        'long-term_memorability': [
+            'long-term_memorability_HMP.npy',
+            'long-term_memorability_C3D.npy',
+            'long-term_memorability_LBP.npy',
+            'long-term_memorability_captions_embeddings.npy',
+            'long-term_memorability_pretrained_ResNet152.npy',
+            'long-term_memorability_our_aesthetics_BR.npy',
+            'long-term_memorability_emotions_ML.npy',
+        ]
+    }
     # Removed: 'long-term_memorability_pretrained_ResNet50.npy', 'long-term_memorability_fine_tuned.npy'
     # 'long-term_memorability_AESTHETICS.npy', 'long-term_memorability_ColorHistogram.npy',
+    # Removed: 'short-term_memorability_pretrained_ResNet50.npy', 'short-term_memorability_AESTHETICS.npy',
+
     N_FILES = 20
 
     results = {}
 
-    comb = combinations_with_replacement(my_filenames, N_FILES)
+    comb = combinations_with_replacement(my_filenames[target], N_FILES)
     for i, combination in enumerate(comb):
 
         print('{}. {}'.format(i, combination))
@@ -82,14 +86,14 @@ if __name__ == "__main__":
         predictions = []
         text = []
 
-        for my_filename in my_filenames:
+        for my_filename in my_filenames[target]:
 
             times = combination.count(my_filename)
             if times > 0:
 
                 weight = times * 1. / N_FILES
                 predictions.append(
-                    np.load(os.path.join('predictions', my_filename)) * weight
+                    np.load(os.path.join('predictions/training/', my_filename)) * weight
                 )
 
                 short_name = my_filename.split(target + '_')[1].split('.npy')[0].replace('pretrained_', '').replace('_embeddings', '').title()
@@ -99,7 +103,7 @@ if __name__ == "__main__":
 
         # evaluate
         corr_coefficient, p_value = evaluate_spearman(y_val, predictions)
-        print('[INFO] Spearman Correlation Coefficient: {:.5f} (p-value {:.5f})'.format(corr_coefficient, p_value))    
+        print('[INFO] Spearman Correlation Coefficient: {:.5f} (p-value {:.5f})'.format(corr_coefficient, p_value))
 
         # save
         results[corr_coefficient] = (', '.join(text), p_value)

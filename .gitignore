@@ -18,5 +18,3 @@ models/*
 !models/.gitkeep
 predictions/
 !predictions/.gitkeep
-reports/
-!reports/.gitkeep
