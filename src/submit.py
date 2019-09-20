@@ -10,16 +10,16 @@ SUBMISSIONS = {
     'shortterm': {
         1: { 'Captions': 0.40, 'Resnet152': 0.55, 'Emotions': 0.05, 'C3D': 0.00, 'LBP': 0.00, 'Aesthetics': 0.00 },
         2: { 'Captions': 0.40, 'Resnet152': 0.55, 'Emotions': 0.00, 'C3D': 0.05, 'LBP': 0.00, 'Aesthetics': 0.00 },
-        3: { 'Captions': 0.40, 'Resnet152': 0.50, 'Emotions': 0.05, 'C3D': 0.00, 'LBP': 0.00, 'Aesthetics': 0.00 },
+        3: { 'Captions': 0.40, 'Resnet152': 0.50, 'Emotions': 0.10, 'C3D': 0.00, 'LBP': 0.00, 'Aesthetics': 0.00 },
         4: { 'Captions': 0.35, 'Resnet152': 0.50, 'Emotions': 0.05, 'C3D': 0.05, 'LBP': 0.05, 'Aesthetics': 0.00 },
-        5: { 'Captions': 0.35, 'Resnet152': 0.50, 'Emotions': 0.45, 'C3D': 0.05, 'LBP': 0.05, 'Aesthetics': 0.05 },
+        5: { 'Captions': 0.35, 'Resnet152': 0.45, 'Emotions': 0.05, 'C3D': 0.05, 'LBP': 0.05, 'Aesthetics': 0.05 },
     },
     'longterm': {
         1: { 'Captions': 0.30, 'Resnet152': 0.20, 'Emotions': 0.25, 'C3D': 0.00, 'LBP': 0.25, 'Aesthetics': 0.00 },
-        2: { 'Captions': 0.30, 'Resnet152': 0.20, 'Emotions': 0.25, 'C3D': 0.05, 'LBP': 0.05, 'Aesthetics': 0.00 },
+        2: { 'Captions': 0.30, 'Resnet152': 0.20, 'Emotions': 0.25, 'C3D': 0.05, 'LBP': 0.20, 'Aesthetics': 0.00 },
         3: { 'Captions': 0.25, 'Resnet152': 0.15, 'Emotions': 0.25, 'C3D': 0.00, 'LBP': 0.35, 'Aesthetics': 0.00 },
-        4: { 'Captions': 0.30, 'Resnet152': 0.15, 'Emotions': 0.25, 'C3D': 0.30, 'LBP': 0.25, 'Aesthetics': 0.05 },
-        5: { 'Captions': 0.30, 'Resnet152': 0.15, 'Emotions': 0.20, 'C3D': 0.05, 'LBP': 0.05, 'Aesthetics': 0.05 },
+        4: { 'Captions': 0.30, 'Resnet152': 0.15, 'Emotions': 0.25, 'C3D': 0.00, 'LBP': 0.25, 'Aesthetics': 0.05 },
+        5: { 'Captions': 0.30, 'Resnet152': 0.15, 'Emotions': 0.20, 'C3D': 0.05, 'LBP': 0.25, 'Aesthetics': 0.05 },
     }
 }
 SUBMISSION_NAME = 'runs/me19mem_insightdcu_{}_run{}.csv'
@@ -53,7 +53,7 @@ for target in SUBMISSIONS.keys():
 
     for run_number, weights in SUBMISSIONS[target].items():
 
-        assert round(sum(weights.values())) == 1, 'ERROR: Sum of feature weights must be equal to 1. Fix that!'
+        assert sum(weights.values()) == 1, 'ERROR: Sum of feature weights must be equal to 1. Fix that!'
 
         # submission name
         submission = SUBMISSION_NAME.format(target, run_number)
