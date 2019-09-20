@@ -16,6 +16,7 @@ SUBMISSIONS = {
 SUBMISSION_NAME = 'runs/me19mem_insightdcu_{}_run{}.csv'
 
 # load test data
+# used the predictions generated for test data
 
 for target in SUBMISSIONS.keys():
 

@@ -187,7 +187,16 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
     print('[INFO] Predicting values...')
     predicted = model.predict(X_val).flatten()
 
-    # return predictions
-
     return predicted
 
+
+def predict_with_embeddings(X_test):
+
+    model_name = config.EMBEDDINGS_MODEL
+    print('[INFO] Loading model {}...'.format(model_name))
+    model = load_model(model_name)
+
+    print('[INFO] Predicting values...')
+    predicted = model.predict(X_test).flatten()
+
+    return predicted

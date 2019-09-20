@@ -5,23 +5,23 @@ import pandas as pd
 import config
 
 
-def data_load(FEATURES_WEIGHTS):
+def data_load(FEATURES_WEIGHTS, GROUNDTRUTH, CAPTIONS, FEATURES_PATH):
     """ Data loader """
 
     # Groudtruth
     print('[INFO] Loading groundtruth data...')
-    dev_dataframe = pd.read_csv(config.DEV_GROUNDTRUTH)
+    dataframe = pd.read_csv(GROUNDTRUTH)
 
     # Include captions?
     if FEATURES_WEIGHTS['CAPTIONS'] > 0:
 
         print('[INFO] Loading captions data...')
         # Load captions
-        dev_captions = pd.read_csv(config.DEV_CAPTIONS, sep='\t', header=None, names=['video', 'caption'] )
+        df_captions = pd.read_csv(CAPTIONS, sep='\t', header=None, names=['video', 'caption'] )
         # Fix captions
-        dev_captions["caption"] = dev_captions["caption"].str.split('-').apply(' '.join)
+        df_captions["caption"] = df_captions["caption"].str.split('-').apply(' '.join)
         # Merge captions
-        dev_dataframe = dev_dataframe.merge(dev_captions)
+        dataframe = dataframe.merge(df_captions)
 
     # Pre-computed features?
     for feature_name in [ 'C3D', 'AESTHETICS', 'HMP', 'ColorHistogram', 'LBP', 'InceptionV3' ]:
@@ -30,19 +30,19 @@ def data_load(FEATURES_WEIGHTS):
 
             print('[INFO] Loading {} video data...'.format(feature_name))
             # Load video feature data
-            dataframe = get_video_features(feature_name)
+            video_dataframe = get_video_features(feature_name, FEATURES_PATH)
             # Merge video feature data
-            dev_dataframe = dev_dataframe.merge(dataframe)
+            dataframe = dataframe.merge(video_dataframe)
 
-    return dev_dataframe
+    return dataframe
 
 
-def get_video_features(feature_name):
+def get_video_features(feature_name, features_path_dict):
     """ Get video features """
 
-    if feature_name not in config.FEATURES_PATH:
+    if feature_name not in features_path_dict:
         raise Exception('Feature {} is not recognized as a valid video feature'.format(feature_name))
-    videos_path = config.FEATURES_PATH[feature_name]
+    videos_path = features_path_dict[feature_name]
     features_dim = config.FEATURES_DIM[feature_name]
 
     # Filenames with the features per video
@@ -205,5 +205,5 @@ if __name__ == "__main__":
         'InceptionV3': 1,
     }
     # Loading Groudtruth + Captions
-    dataframe = data_load(FEATURES_WEIGHTS)
+    dataframe = data_load(FEATURES_WEIGHTS, config.DEV_GROUNDTRUTH, config.DEV_CAPTIONS, config.DEV_FEATURES_PATH)
     print(dataframe.head())
