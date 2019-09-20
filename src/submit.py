@@ -53,7 +53,9 @@ for target in SUBMISSIONS.keys():
 
     for run_number, weights in SUBMISSIONS[target].items():
 
-        assert sum(weights.values()) == 1, 'ERROR: Sum of feature weights must be equal to 1. Fix that!'
+        print(sum(weights.values()))
+
+        # assert sum(weights.values()) == 1, 'ERROR: Sum of feature weights must be equal to 1. Fix that!'
 
         # submission name
         submission = SUBMISSION_NAME.format(target, run_number)
