@@ -16,3 +16,9 @@ features/*
 !features/.gitkeep
 models/*
 !models/.gitkeep
+predictions/
+!predictions/.gitkeep
+reports/
+!reports/.gitkeep
+runs/
+!runs/.gitkeep

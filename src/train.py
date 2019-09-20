@@ -53,7 +53,13 @@ FEATURES_ALGORITHM: {}""".format(config.TARGET,
 ## LOAD DATA
 
 print('[INFO] Loading data...')
-dataframe = data_load(config.FEATURES_WEIGHTS, config.DEV_GROUNDTRUTH, config.DEV_CAPTIONS, config.DEV_FEATURES_PATH)
+dataframe = data_load(
+    config.FEATURES_WEIGHTS, 
+    config.DEV_GROUNDTRUTH, 
+    config.DEV_CAPTIONS, 
+    config.DEV_FEATURES_PATH,
+    'train_val',
+)
 
 X = dataframe.drop(columns=config.TARGET_COLS)
 Y = dataframe[config.TARGET]
@@ -85,7 +91,7 @@ for feature_name in config.FEATURES_WEIGHTS:
             ## ENCODING & MODELLING
 
             print('[INFO] Processing captions with embeddings...')
-            preds_filename = 'predictions/{}_captions_embeddings'.format(config.TARGET)
+            preds_filename = '{}/{}_captions_embeddings'.format(config.PREDICTIONS_TRAIN, config.TARGET)
             
             fold = 0
             os.mkdir(config.RUN_LOG_FOLD_DIR.format(fold))
@@ -103,7 +109,7 @@ for feature_name in config.FEATURES_WEIGHTS:
 
             pretrained_nn = config.PRE_TRAINED_NN
             print('[INFO] {} as feature extractor...'.format(pretrained_nn))
-            preds_filename = 'predictions/{}_pretrained_{}'.format(config.TARGET, pretrained_nn)
+            preds_filename = '{}/{}_pretrained_{}'.format(config.PREDICTIONS_TRAIN, config.TARGET, pretrained_nn)
 
             X_train_features = get_features_from_last_layer_pretrained_nn(X_train['video'], config.DEV_FRAMES,
                                 pretrained_nn, 'train')
@@ -126,7 +132,7 @@ for feature_name in config.FEATURES_WEIGHTS:
             ## FINE-TUNED CNN
 
             print('[INFO] Fine tuning our own network...')
-            preds_filename = 'predictions/{}_fine_tuned'.format(config.TARGET)
+            preds_filename = '{}/{}_fine_tuned'.format(config.PREDICTIONS_TRAIN, config.TARGET)
 
             predictions_features = train_fine_tuned_cnn(X_train['video'], X_val['video'], 
                                                     y_train, y_val, config.DEV_FRAMES)
@@ -140,7 +146,7 @@ for feature_name in config.FEATURES_WEIGHTS:
             ## EMOTIONS FEATURES
 
             print('[INFO] Using our own emotion features and apply a DL approach...')
-            preds_filename = 'predictions/{}_emotions_DL'.format(config.TARGET)
+            preds_filename = '{}/{}_emotions_DL'.format(config.PREDICTIONS_TRAIN, config.TARGET)
 
             predictions_features = train_emotions(X_train['video'], X_val['video'], 
                                                     y_train, y_val, config.EMOTIONS_DEV)
@@ -158,7 +164,7 @@ for feature_name in config.FEATURES_WEIGHTS:
                 # TRANSFORM CAPTIONS
 
                 print('[INFO] Processing the captions and transforming them into numbers...')
-                preds_filename = 'predictions/{}_captions_tfidf'.format(config.TARGET)
+                preds_filename = '{}/{}_captions_tfidf'.format(config.PREDICTIONS_TRAIN, config.TARGET)
 
                 X_train_features, X_val_features = fit_and_transform_text(X_train['caption'], X_val['caption'])
                 X_train_features = X_train_features.toarray()
@@ -167,7 +173,7 @@ for feature_name in config.FEATURES_WEIGHTS:
             elif feature_name == 'Our_Aesthetics': # OUR PRE-COMPUTED AESTHETICS BY INSIGHT
 
                 print('[INFO] Extracting our own aesthetics features...')
-                preds_filename = 'predictions/{}_our_aesthetics'.format(config.TARGET)
+                preds_filename = '{}/{}_our_aesthetics'.format(config.PREDICTIONS_TRAIN, config.TARGET)
 
                 X_train_features, X_val_features = train_our_aesthetics(X_train['video'], X_val['video'], 
                                                                         config.OUR_AESTHETICS_DEV)
@@ -175,7 +181,7 @@ for feature_name in config.FEATURES_WEIGHTS:
             elif feature_name == 'Emotions' and not config.EMOTIONS_NN:
 
                 print('[INFO] Extracting our own emotion features and apply a traditional ML approach...')
-                preds_filename = 'predictions/{}_emotions_ML'.format(config.TARGET)
+                preds_filename = '{}/{}_emotions_ML'.format(config.PREDICTIONS_TRAIN, config.TARGET)
 
                 X_train_features, X_val_features = get_emotions_data(X_train['video'], X_val['video'], 
                                                                         config.EMOTIONS_DEV)
@@ -183,7 +189,7 @@ for feature_name in config.FEATURES_WEIGHTS:
             else:
 
                 print('[INFO] Processing {} features...'.format(feature_name))
-                preds_filename = 'predictions/{}_{}'.format(config.TARGET, feature_name)
+                preds_filename = '{}/{}_{}'.format(config.PREDICTIONS_TRAIN, config.TARGET, feature_name)
 
                 X_train_features = X_train.filter(regex=('{}_*'.format(feature_name)))
                 X_val_features = X_val.filter(regex=('{}_*'.format(feature_name)))

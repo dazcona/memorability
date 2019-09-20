@@ -86,7 +86,6 @@ def get_emotions_data(train_videos, val_videos, emotions_path):
     else:
         X_train = np.load(X_emotions_train_filename)
 
-
     print('[INFO] Validation data...')
     X_emotions_val_filename = '{}/emotions_val.npy'.format(config.MY_FEATURES_DIR)
 
@@ -97,6 +96,20 @@ def get_emotions_data(train_videos, val_videos, emotions_path):
         X_val = np.load(X_emotions_val_filename)
 
     return X_train, X_val
+
+
+def get_emotions_test_data(videos, emotions_path, dev_or_test):
+
+    print('[INFO] Testing data...')
+    X_emotions_filename = '{}/emotions_{}.npy'.format(config.MY_FEATURES_DIR, dev_or_test)
+
+    if not os.path.isfile(X_emotions_filename):
+        features = get_video_emotions(videos, emotions_path)
+        np.save(X_emotions_filename, features)
+    else:
+        features = np.load(X_emotions_filename)
+
+    return features
 
 
 def train_emotions(train_videos, val_videos, y_train, y_val, emotions_path):

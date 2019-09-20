@@ -102,6 +102,21 @@ def train_predict(X_train, y_train, X_val, feature_name, method, grid_search=Fal
     return predicted
 
 
+def fit_predict(X_train_val, Y_train_val, X_test, feature_name):
+
+    print('[INFO] Loading model...')
+    model = BEST_MODEL[config.TARGET][feature_name]
+
+    # Fit model
+    print('[INFO] Fitting model...')
+    model.fit(X_train_val, Y_train_val)
+
+    print('[INFO] Predicting values...')
+    predicted = model.predict(X_test)
+
+    return predicted
+
+
 if __name__ == "__main__":
     n_samples, n_features = 10, 5
     rng = np.random.RandomState(0)

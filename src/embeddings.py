@@ -14,7 +14,7 @@ from keras.models import load_model
 from keras import regularizers
 import matplotlib.pyplot as plt
 # import keras.backend as K
-
+import pickle
 
 NUM_UNITS = 64
 DROPOUT = 0.75
@@ -41,18 +41,25 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
     # Tokenizer
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(train_captions)
+    # # Save Tokenizer
+    with open(config.CAPTIONS_EMBEDDINGS_TOKENIZER, 'wb') as f:
+        pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
+
     # Sequences
     train_sequences = tokenizer.texts_to_sequences(train_captions)
     # Padding
     word_index = tokenizer.word_index
     MAX_NUM_WORDS = len(word_index)
     MAX_SEQUENCE_LENGTH = max([ len(caption.split()) for caption in train_captions ])
+    # # Save
+    with open(config.CAPTIONS_MAX_SEQUENCE_LENGTH, 'w') as f:
+        f.write(str(MAX_SEQUENCE_LENGTH))
 
     # X and Y TRAIN
     X_train = pad_sequences(train_sequences, maxlen=MAX_SEQUENCE_LENGTH)
     y_train = np.array(y_train)
 
-    # X and Y TEST
+    # X and Y validation
     print('[INFO] Preprocessing validation captions...')
     validation_captions = validation_captions.tolist()
     validation_sequences = tokenizer.texts_to_sequences(validation_captions)
@@ -96,6 +103,8 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
             recurrent_dropout=RECURRENT_DROPOUT,
             return_sequences=False,
         )(embedded_sequences)
+        x = Dense(1024, activation="relu")(x)
+        x = Dropout(0.25)(x)
         x = Dense(512, activation="relu")(x)
         x = Dropout(0.25)(x)
         x = Dense(256, activation="relu")(x)
@@ -184,7 +193,7 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
 
     else:
 
-        model_name = config.EMBEDDINGS_MODEL
+        model_name = config.EMBEDDINGS_MODEL[config.TARGET_SHORT_NAME]
         print('[INFO] Loading model {}...'.format(model_name))
         model = load_model(model_name)
 
@@ -194,11 +203,26 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
     return predicted
 
 
-def predict_with_embeddings(X_test):
+def fit_predict_with_embeddings(test_captions):
 
-    model_name = config.EMBEDDINGS_MODEL
+    # Load Tokenizer
+    print('[INFO] Loading Tokenizer...')
+    with open(config.CAPTIONS_EMBEDDINGS_TOKENIZER, 'rb') as f:
+        tokenizer = pickle.load(f)
+
+    # Load MAX_SEQUENCE_LENGTH
+    with open(config.CAPTIONS_MAX_SEQUENCE_LENGTH) as f:
+        MAX_SEQUENCE_LENGTH = int(f.read())
+    print('[INFO] MAX_SEQUENCE_LENGTH={}'.format(MAX_SEQUENCE_LENGTH))
+
+    model_name = config.EMBEDDINGS_MODEL[config.TARGET_SHORT_NAME]
     print('[INFO] Loading model {}...'.format(model_name))
     model = load_model(model_name)
+
+    print('[INFO] Preprocessing validation captions...')
+    test_captions = test_captions.tolist()
+    test_sequences = tokenizer.texts_to_sequences(test_captions)
+    X_test = pad_sequences(test_sequences, maxlen=MAX_SEQUENCE_LENGTH)
 
     print('[INFO] Predicting values...')
     predicted = model.predict(X_test).flatten()

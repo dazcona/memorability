@@ -38,3 +38,10 @@ def train_our_aesthetics(train_videos, val_videos, aesthetics_path):
     X_val = get_aesthetics(val_videos, aesthetics_path)
 
     return X_train, X_val
+
+
+def videos_to_our_aesthetics(videos, aesthetics_path):
+    
+    features = get_aesthetics(videos, aesthetics_path)
+
+    return features

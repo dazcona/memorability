@@ -3,14 +3,19 @@ import os
 import numpy as np
 import pandas as pd
 import config
+# import pdb; pdb.set_trace()
 
 
-def data_load(FEATURES_WEIGHTS, GROUNDTRUTH, CAPTIONS, FEATURES_PATH):
+def data_load(FEATURES_WEIGHTS, GROUNDTRUTH, CAPTIONS, FEATURES_PATH, dev_or_test):
     """ Data loader """
 
     # Groudtruth
     print('[INFO] Loading groundtruth data...')
-    dataframe = pd.read_csv(GROUNDTRUTH)
+    if 'train' in dev_or_test: 
+        dataframe = pd.read_csv(GROUNDTRUTH)
+    else: # test
+        dataframe = pd.read_csv(GROUNDTRUTH, sep="\n", header=None, names=['video'])
+        dataframe['video'] = dataframe['video'].str.replace('.txt', '.webm').str.strip()
 
     # Include captions?
     if FEATURES_WEIGHTS['CAPTIONS'] > 0:
@@ -20,6 +25,7 @@ def data_load(FEATURES_WEIGHTS, GROUNDTRUTH, CAPTIONS, FEATURES_PATH):
         df_captions = pd.read_csv(CAPTIONS, sep='\t', header=None, names=['video', 'caption'] )
         # Fix captions
         df_captions["caption"] = df_captions["caption"].str.split('-').apply(' '.join)
+
         # Merge captions
         dataframe = dataframe.merge(df_captions)
 
@@ -30,14 +36,15 @@ def data_load(FEATURES_WEIGHTS, GROUNDTRUTH, CAPTIONS, FEATURES_PATH):
 
             print('[INFO] Loading {} video data...'.format(feature_name))
             # Load video feature data
-            video_dataframe = get_video_features(feature_name, FEATURES_PATH)
+            video_dataframe = get_video_features(feature_name, FEATURES_PATH, dev_or_test)
+
             # Merge video feature data
-            dataframe = dataframe.merge(video_dataframe)
+            dataframe = dataframe.merge(video_dataframe)   
 
     return dataframe
 
 
-def get_video_features(feature_name, features_path_dict):
+def get_video_features(feature_name, features_path_dict, dev_or_test):
     """ Get video features """
 
     if feature_name not in features_path_dict:
@@ -49,7 +56,7 @@ def get_video_features(feature_name, features_path_dict):
     video_filenames = os.listdir(videos_path)
 
     # CSV features file
-    csv_features_filename = '{}/{}_train_val.csv'.format(config.MY_FEATURES_DIR, feature_name)
+    csv_features_filename = '{}/{}_{}.csv'.format(config.MY_FEATURES_DIR, feature_name, dev_or_test)
     if not os.path.isfile(csv_features_filename):
         # Create it
         print('[INFO] Creating {}...'.format(csv_features_filename))
@@ -101,7 +108,7 @@ def write_filename(csv_filename, path, filenames, feature_name, features_dim):
         temp_dataframe = pd.DataFrame(videos)
 
         # save as csv
-        temp_dataframe.to_csv(csv_filename)
+        temp_dataframe.to_csv(csv_filename, index=False)
 
     elif feature_name in ['ColorHistogram', 'InceptionV3']:
 
@@ -122,7 +129,7 @@ def write_filename(csv_filename, path, filenames, feature_name, features_dim):
         temp_dataframe = pd.DataFrame(videos)
 
         # save as csv
-        temp_dataframe.to_csv(csv_filename)
+        temp_dataframe.to_csv(csv_filename, index=False)
 
     elif feature_name in ['LBP']:
 
@@ -205,5 +212,6 @@ if __name__ == "__main__":
         'InceptionV3': 1,
     }
     # Loading Groudtruth + Captions
-    dataframe = data_load(FEATURES_WEIGHTS, config.DEV_GROUNDTRUTH, config.DEV_CAPTIONS, config.DEV_FEATURES_PATH)
+    dataframe = data_load(FEATURES_WEIGHTS, config.DEV_GROUNDTRUTH, 
+                            config.DEV_CAPTIONS, config.DEV_FEATURES_PATH, 'train_val')
     print(dataframe.head())

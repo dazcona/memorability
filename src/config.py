@@ -44,16 +44,19 @@ ENCODING_ALGORITHM = {
     'CAPTIONS': 'EMBEDDINGS' # TFIDF or EMBEDDINGS
 }
 # Train embeddings
-EMBEDDINGS_TRAINING = True
+EMBEDDINGS_TRAINING = False
 # Model's path
-EMBEDDINGS_MODEL = ''
+EMBEDDINGS_MODEL = {
+    'short': 'logs/run-2019-09-20_17-11-45/checkpoints/weights-fold_0-79-0.0048722358.hdf5',
+    'long': 'logs/run-2019-09-19_17-03-42/checkpoints/weights-fold_0-188-0.0198000782.hdf5'
+}
 # 'logs/run-2019-09-19_16-42-25/checkpoints/weights-fold_0-47-0.0197818204.hdf5' 
 # 'logs/run-2019-09-16_16-10-58/checkpoints/weights-fold_0-23-0.0203232624.hdf5'
 # long-term: 'logs/run-2019-09-16_16-10-58/checkpoints/weights-fold_0-23-0.0203232624.hdf5'
 # short-term: 'checkpoints/run-2019-09-03_16-40-09/weights-fold_0-97-0.0051547588.hdf5'
 
 # PRE-TRAINED CNN
-PRE_TRAINED_NN = 'DenseNet121'
+PRE_TRAINED_NN = 'ResNet152'
 
 # FINE-TUNED CNN
 FINE_TUNE_EVALUATE_ONLY = True
@@ -112,7 +115,7 @@ TEST_GROUNDTRUTH = os.path.join(DATA_DIR, 'testset', 'test-set_list.txt')
 # CAPTIONS
 DEV_CAPTIONS = os.path.join(DEV_DIR, 'dev-set_video-captions.txt')
 # DEV_CAPTIONS_2 = os.path.join(DEV_DIR, 'dev-set_video-captions2.txt')
-TEST_CAPTIONS = os.path.join(TEST_DIR, 'test-set_video-captions.txt')
+TEST_CAPTIONS = os.path.join(TEST_DIR, 'test-set_videos-captions.txt')
 
 # PRE-TRAINED EMBEDDINGS
 GLOVE_FILE = os.path.join(HD_DIR, 'glove', 'glove.6B.300d.txt')
@@ -132,7 +135,7 @@ DEV_FEATURES_PATH = {
 TEST_FEATURES = os.path.join(TEST_DIR, 'features')
 TEST_FEATURES_PATH = {
     'C3D': os.path.join(TEST_FEATURES, 'C3D'),
-    'AESTHETICS': os.path.join(TEST_FEATURES, 'aesthetic_visual_features', 'aesthetic_feat_test-set_mean'),
+    'AESTHETICS': os.path.join(TEST_FEATURES, 'Aesthetics', 'aesthetics_mean'),
     'HMP': os.path.join(TEST_FEATURES, 'HMP'),
     'ColorHistogram': os.path.join(TEST_FEATURES, 'ColorHistogram'),
     'HOG': os.path.join(TEST_FEATURES, 'HOG'),
@@ -178,3 +181,12 @@ EMOTIONS_TEST = os.path.join(EMOTIONS_DIR, 'testset')
 OUR_AESTHETICS_DIR = os.path.join(HD_DIR, 'feiyan_aesthetics')
 OUR_AESTHETICS_DEV = os.path.join(OUR_AESTHETICS_DIR, 'aesthetic_feature_dev')
 OUR_AESTHETICS_TEST = os.path.join(OUR_AESTHETICS_DIR, 'aesthetic_feature_test')
+
+# PREDICTIONS
+PREDICTIONS_DIR = 'predictions'
+PREDICTIONS_TRAIN = os.path.join(PREDICTIONS_DIR, 'training')
+PREDICTIONS_TEST = os.path.join(PREDICTIONS_DIR, 'test')
+
+# TOKENIZER
+CAPTIONS_EMBEDDINGS_TOKENIZER = os.path.join(MY_FEATURES_DIR, 'embeddings_tokenizer.pickle')
+CAPTIONS_MAX_SEQUENCE_LENGTH = os.path.join(MY_FEATURES_DIR, 'max_sequence_length.txt')

@@ -76,14 +76,24 @@ $ python src/extract_frames.py
 $ python src/extract_emotions.py
 ```
 
-7. Modify the file *src/config.py* to run the desired experiment:
+7. Modify the file *src/config.py* to run the desired experiment.
 
 8. Run the training:
 ```
 $ python src/train.py
 ```
 
-9. [Optional] Visualizing heatmaps of class activation:
+9. Run the test:
+```
+$ python src/test.py
+```
+
+10. Run submission generation:
+```
+$ python src/submit.py
+```
+
+11. [Optional] Visualizing heatmaps of class activation:
 ```
 $ python src/viz_activations.py --model ResNet152
 ```
