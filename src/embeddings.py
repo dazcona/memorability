@@ -5,7 +5,7 @@ import config
 from loader import load_pretrained_word_vectors
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from keras.layers import Embedding, Input, GRU, Dense, MaxPooling1D, Conv1D
+from keras.layers import Embedding, Input, GRU, Dense, MaxPooling1D, Conv1D, Dropout
 from keras.initializers import Constant
 from keras.models import Model
 from keras.optimizers import Adam
@@ -94,8 +94,12 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
             units=NUM_UNITS, 
             dropout=DROPOUT, 
             recurrent_dropout=RECURRENT_DROPOUT,
-            # return_sequences=True,
+            return_sequences=False,
         )(embedded_sequences)
+        x = Dense(512, activation="relu")(x)
+        x = Dropout(0.25)(x)
+        x = Dense(256, activation="relu")(x)
+        x = Dropout(0.25)(x)
         # x = GRU(
         #     units=NUM_UNITS, 
         #     dropout=DROPOUT, 

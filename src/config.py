@@ -46,7 +46,8 @@ ENCODING_ALGORITHM = {
 # Train embeddings
 EMBEDDINGS_TRAINING = True
 # Model's path
-EMBEDDINGS_MODEL = '' 
+EMBEDDINGS_MODEL = ''
+# 'logs/run-2019-09-19_16-42-25/checkpoints/weights-fold_0-47-0.0197818204.hdf5' 
 # 'logs/run-2019-09-16_16-10-58/checkpoints/weights-fold_0-23-0.0203232624.hdf5'
 # long-term: 'logs/run-2019-09-16_16-10-58/checkpoints/weights-fold_0-23-0.0203232624.hdf5'
 # short-term: 'checkpoints/run-2019-09-03_16-40-09/weights-fold_0-97-0.0051547588.hdf5'
