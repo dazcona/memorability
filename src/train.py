@@ -53,7 +53,7 @@ FEATURES_ALGORITHM: {}""".format(config.TARGET,
 ## LOAD DATA
 
 print('[INFO] Loading data...')
-dataframe = data_load(config.FEATURES_WEIGHTS)
+dataframe = data_load(config.FEATURES_WEIGHTS, config.DEV_GROUNDTRUTH, config.DEV_CAPTIONS, config.DEV_FEATURES_PATH)
 
 X = dataframe.drop(columns=config.TARGET_COLS)
 Y = dataframe[config.TARGET]

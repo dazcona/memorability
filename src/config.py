@@ -101,13 +101,18 @@ HD_DIR = '/datasets'
 # DATA
 DATA_DIR = os.path.join(HD_DIR, 'memorability', 'campus.pub.ro')
 
-# DEV
+# DEV & TEST
 DEV_DIR = os.path.join(DATA_DIR, 'devset', 'dev-set')
+TEST_DIR = os.path.join(DATA_DIR, 'testset', 'me19me-testset', 'test-set')
+
+# GROUNDTRUTH
 DEV_GROUNDTRUTH = os.path.join(DEV_DIR, 'ground-truth', 'ground-truth_dev-set.csv')
+TEST_GROUNDTRUTH = os.path.join(DATA_DIR, 'testset', 'test-set_list.txt')
 
 # CAPTIONS
 DEV_CAPTIONS = os.path.join(DEV_DIR, 'dev-set_video-captions.txt')
 # DEV_CAPTIONS_2 = os.path.join(DEV_DIR, 'dev-set_video-captions2.txt')
+TEST_CAPTIONS = os.path.join(TEST_DIR, 'test-set_video-captions.txt')
 
 # PRE-TRAINED EMBEDDINGS
 GLOVE_FILE = os.path.join(HD_DIR, 'glove', 'glove.6B.300d.txt')
@@ -115,20 +120,24 @@ EMBEDDING_DIM = 300
 
 # FEATURES
 DEV_FEATURES = os.path.join(DEV_DIR, 'features')
-DEV_C3D_FEATURE = os.path.join(DEV_FEATURES, 'C3D')
-DEV_AESTHETIC_FEATURE = os.path.join(DEV_FEATURES, 'aesthetic_visual_features', 'aesthetic_feat_dev-set_mean')
-DEV_HMP_FEATURE = os.path.join(DEV_FEATURES, 'HMP')
-DEV_ColorHistogram_FEATURE = os.path.join(DEV_FEATURES, 'ColorHistogram')
-DEV_HOG_FEATURE = os.path.join(DEV_FEATURES, 'HOG')
-DEV_LBP_FEATURE = os.path.join(DEV_FEATURES, 'LBP')
-DEV_InceptionV3_FEATURE = os.path.join(DEV_FEATURES, 'InceptionV3')
-FEATURES_PATH = {
-    'C3D': DEV_C3D_FEATURE,
-    'AESTHETICS': DEV_AESTHETIC_FEATURE,
-    'HMP': DEV_HMP_FEATURE,
-    'ColorHistogram': DEV_ColorHistogram_FEATURE,
-    'LBP': DEV_LBP_FEATURE,
-    'InceptionV3': DEV_InceptionV3_FEATURE,
+DEV_FEATURES_PATH = {
+    'C3D': os.path.join(DEV_FEATURES, 'C3D'),
+    'AESTHETICS': os.path.join(DEV_FEATURES, 'aesthetic_visual_features', 'aesthetic_feat_dev-set_mean'),
+    'HMP': os.path.join(DEV_FEATURES, 'HMP'),
+    'ColorHistogram': os.path.join(DEV_FEATURES, 'ColorHistogram'),
+    'HOG': os.path.join(DEV_FEATURES, 'HOG'),
+    'LBP': os.path.join(DEV_FEATURES, 'LBP'),
+    'InceptionV3': os.path.join(DEV_FEATURES, 'InceptionV3'),
+}
+TEST_FEATURES = os.path.join(TEST_DIR, 'features')
+TEST_FEATURES_PATH = {
+    'C3D': os.path.join(TEST_FEATURES, 'C3D'),
+    'AESTHETICS': os.path.join(TEST_FEATURES, 'aesthetic_visual_features', 'aesthetic_feat_test-set_mean'),
+    'HMP': os.path.join(TEST_FEATURES, 'HMP'),
+    'ColorHistogram': os.path.join(TEST_FEATURES, 'ColorHistogram'),
+    'HOG': os.path.join(TEST_FEATURES, 'HOG'),
+    'LBP': os.path.join(TEST_FEATURES, 'LBP'),
+    'InceptionV3': os.path.join(TEST_FEATURES, 'InceptionV3'),
 }
 FEATURES_DIM = {
     'C3D': 101,
@@ -138,33 +147,27 @@ FEATURES_DIM = {
     'LBP': 122 * 3,
     'InceptionV3': None,
 }
+
+# FRAMES
 # First, Middle and Last frames
 THREE_FRAMES = [0, 56, 112]
 # 8 frames: one per second
 FRAME_NUMBERS = [1, 24, 48, 72, 96, 120, 144, 168]
+# SOME FRAMES
+FRAME_SAMPLES = 'figures/frame_samples/'
 
 # SOURCES
 DEV_SOURCES = os.path.join(DEV_DIR, 'sources') # 8,000 videos
 # DEV_SOURCES_2 = os.path.join(DEV_DIR, 'sources2') # 6,000 videos
+TEST_SOURCES = os.path.join(TEST_DIR, 'sources') # 2,000 videos
 
 # FRAMES
 DEV_FRAMES = os.path.join(DEV_DIR, 'frames')
 DEV_NUMPY_FRAMES = os.path.join(DEV_DIR, 'npy_frames')
+TEST_FRAMES = os.path.join(TEST_DIR, 'frames')
 
 # PROCESSED FEATURES
 MY_FEATURES_DIR = os.path.join(HD_DIR, 'processed')
-
-# TEST
-TEST_GROUNDTRUTH = os.path.join(DATA_DIR, 'testset', 'test-set_list.txt')
-TEST_DIR = os.path.join(DATA_DIR, 'testset', 'me19me-testset', 'test-set')
-TEST_CAPTIONS = os.path.join(TEST_DIR, 'test-set_video-captions.txt')
-TEST_FEATURES = os.path.join(TEST_DIR, 'features')
-TEST_FEATURES_LIST = ['C3D', 'HMP', 'InceptionV3', 'LBP', 'Aesthetics', 'ColorHistogram', 'HOG', 'ORB']
-TEST_SOURCES = os.path.join(TEST_DIR, 'sources') # 2,000 videos
-TEST_FRAMES = os.path.join(TEST_DIR, 'frames')
-
-# SOME FRAMES
-FRAME_SAMPLES = 'figures/frame_samples/'
 
 # MY FEATURES
 # EMOTIONS
