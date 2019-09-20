@@ -2,7 +2,7 @@ import os
 import datetime
 
 # Column to predict
-TARGET_SHORT_NAME = 'long' # 'short' or 'long'
+TARGET_SHORT_NAME = 'short' # 'short' or 'long'
 TARGET = '{}-term_memorability'.format(TARGET_SHORT_NAME)
 # Target columns
 TARGET_COLS = [ 'short-term_memorability', 'nb_short-term_annotations', 'long-term_memorability', 'nb_long-term_annotations' ]
@@ -44,7 +44,7 @@ ENCODING_ALGORITHM = {
     'CAPTIONS': 'EMBEDDINGS' # TFIDF or EMBEDDINGS
 }
 # Train embeddings
-EMBEDDINGS_TRAINING = False
+EMBEDDINGS_TRAINING = True
 # Model's path
 EMBEDDINGS_MODEL = {
     'short': 'logs/run-2019-09-20_17-11-45/checkpoints/weights-fold_0-79-0.0048722358.hdf5',
@@ -61,32 +61,10 @@ PRE_TRAINED_NN = 'ResNet152'
 # FINE-TUNED CNN
 FINE_TUNE_EVALUATE_ONLY = True
 FINE_TUNED_MODEL = 'logs/run-2019-09-18_12-42-36/checkpoints/weights-part_1-01-0.0223143869.hdf5'
-# 'logs/run-2019-09-18_09-51-01/checkpoints/weights-part_1-02-0.0229876925.hdf5'
-# 'logs/run-2019-09-17_23-20-46/checkpoints/weights-part_0-01-0.0220884897.hdf5'
-# 'logs/run-2019-09-16_23-38-20/checkpoints/weights-part_1-29-0.0068147990.hdf5'
-# 'logs/run-2019-09-14_18-59-52/checkpoints/weights-part_1-43-0.0065387096.hdf5'
-# 'logs/run-2019-09-14_15-40-55/checkpoints/weights-part_0-01-0.0100537471.hdf5'
-# 'logs/run-2019-09-14_13-59-54/checkpoints/weights-part_0-01-0.0264736740.hdf5'
-# 'models/fine-tuning-warmup-one-frame-weights-fold_0-01-0.0271032082.hdf5'
-# 'models/fine-tuning-warmup-weights-fold_0-01-0.0264373418.hdf5' # 8 frames, 1 epoch, 0.25854 (p-value 0.00000)
 
-# 'checkpoints/run-2019-09-13_14-44-43/weights-fold_0-06-17.9225301506.hdf5'
-# 'checkpoints/run-2019-09-13_12-12-56/weights-fold_0-01-0.0247115156.hdf5'
-# 'checkpoints/run-2019-09-13_11-33-32/weights-fold_0-01-0.0275342398.hdf5'
-# 'checkpoints/run-2019-09-13_11-14-40/weights-fold_0-01-0.0275342398.hdf5'
-# 'checkpoints/run-2019-09-12_17-57-21/weights-fold_0-01-0.0275577824.hdf5'
-# 'checkpoints/run-2019-09-12_17-11-19/weights-fold_0-01-0.0275342398.hdf5'
-# 'checkpoints/run-2019-09-12_16-05-08/weights-fold_0-01-0.0241449984.hdf5'
-# 'checkpoints/run-2019-09-11_17-55-01/weights-fold_0-08-0.0069531268.hdf5'
-# 'logs/run-2019-09-11_17-55-01/fine_tuning_model_after_warmup.h5'
-
+# EMOTIONS NN
 EMOTIONS_NN = True
 EMOTIONS_MODEL = 'logs/run-2019-09-19_14-26-02/checkpoints/emotions-weights-fold_0-13-0.0458815261.hdf5'
-# 'logs/run-2019-09-18_12-29-21/checkpoints/emotions-weights-fold_0-270-0.0163350874.hdf5'
-# 'logs/run-2019-09-18_12-08-36/checkpoints/emotions-weights-fold_0-111-0.0163384946.hdf5'
-
-# EPOCHS
-# NUM_EPOCHS = 100
 
 # CURRENT DIR
 current_dir_path = os.path.dirname(os.path.realpath(__file__))

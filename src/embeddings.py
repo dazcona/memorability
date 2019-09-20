@@ -109,12 +109,6 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
         x = Dropout(0.25)(x)
         x = Dense(256, activation="relu")(x)
         x = Dropout(0.25)(x)
-        # x = GRU(
-        #     units=NUM_UNITS, 
-        #     dropout=DROPOUT, 
-        #     recurrent_dropout=RECURRENT_DROPOUT,
-        #     return_sequences=False,
-        # )(x)
         preds = Dense(1, activation='sigmoid')(x)
         model = Model(sequence_input, preds)
 

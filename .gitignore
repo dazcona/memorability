@@ -20,5 +20,3 @@ predictions/
 !predictions/.gitkeep
 reports/
 !reports/.gitkeep
-runs/
-!runs/.gitkeep
