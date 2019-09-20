@@ -104,11 +104,11 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
             return_sequences=False,
         )(embedded_sequences)
         x = Dense(1024, activation="relu")(x)
-        x = Dropout(0.25)(x)
+        x = Dropout(0.25, seed=42)(x)
         x = Dense(512, activation="relu")(x)
-        x = Dropout(0.25)(x)
+        x = Dropout(0.25, seed=42)(x)
         x = Dense(256, activation="relu")(x)
-        x = Dropout(0.25)(x)
+        x = Dropout(0.25, seed=42)(x)
         preds = Dense(1, activation='sigmoid')(x)
         model = Model(sequence_input, preds)
 
