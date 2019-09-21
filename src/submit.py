@@ -22,7 +22,7 @@ SUBMISSIONS = {
         5: { 'Captions': 0.30, 'Resnet152': 0.15, 'Emotions': 0.20, 'C3D': 0.05, 'LBP': 0.25, 'Aesthetics': 0.05 },
     }
 }
-SUBMISSION_NAME = 'runs/me19mem_insightdcu_{}_run{}.csv'
+SUBMISSION_NAME = 'runs/me19mem_insightdcu_{}_run{}-required.csv'
 
 ## PREDICTIONS FILENAMES
 PREDICTIONS = {
@@ -53,7 +53,7 @@ for target in SUBMISSIONS.keys():
 
     for run_number, weights in SUBMISSIONS[target].items():
 
-        print(sum(weights.values()))
+        print('Sum of weights: {}'.format(sum(weights.values())))
 
         # assert sum(weights.values()) == 1, 'ERROR: Sum of feature weights must be equal to 1. Fix that!'
 

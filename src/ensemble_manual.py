@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import config
 from loader import data_load
 from sklearn.model_selection import train_test_split
 from itertools import combinations_with_replacement
@@ -30,7 +31,7 @@ if __name__ == "__main__":
         'PRE-TRAINED NN': 0,
         'FINE-TUNED NN': 0,
         'Emotions': 0,
-    })
+    }, config.DEV_GROUNDTRUTH, config.DEV_CAPTIONS, config.DEV_FEATURES_PATH, 'train_val')
 
     X = dataframe.drop(columns=[ 'short-term_memorability', 'nb_short-term_annotations', 'long-term_memorability', 'nb_long-term_annotations' ])
     Y = dataframe[target]
@@ -47,7 +48,7 @@ if __name__ == "__main__":
     print('[INFO] Number of training samples: {}'.format(len(X_train)))
     print('[INFO] Number of validation samples: {}'.format(len(X_val)))
 
-    filenames = [ filename for filename in os.listdir('predictions') if filename.startswith(target) ]
+    filenames = [ filename for filename in os.listdir('predictions/training/') if filename.startswith(target) ]
     print('Filenames:')
     print('\n'.join(filenames))
 
@@ -72,7 +73,7 @@ if __name__ == "__main__":
         if weight > 0:
             print("[INFO] Reading: {} with weight: {}".format(filename, weight))
             predictions.append(
-                np.load(os.path.join('predictions', filename)) * weight
+                np.load(os.path.join('predictions/training', filename)) * weight
             )
     predictions = np.sum(predictions, axis=0)
 

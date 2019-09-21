@@ -68,8 +68,6 @@ predictions_features = fit_predict_with_embeddings(X_test['caption'])
 preds_filename = '{}/{}_captions_embeddings'.format(config.PREDICTIONS_TEST, config.TARGET)
 np.save(preds_filename, predictions_features)
 
-sys.exit(1)
-
 # PRE-TRAINED CNN AS FEATURE EXTRACTOR
 
 pretrained_nn = config.PRE_TRAINED_NN
