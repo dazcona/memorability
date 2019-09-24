@@ -12,5 +12,7 @@ logs/*
 !logs/.gitkeep
 models/*
 !models/.gitkeep
-predictions/
-!predictions/.gitkeep
+predictions/training/*
+predictions/test/*
+!predictions/training/.gitkeep
+!predictions/test/.gitkeep
