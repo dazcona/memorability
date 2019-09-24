@@ -5,6 +5,9 @@ from tqdm import tqdm
 
 
 def get_aesthetics(videos, aesthetics_path):
+    """
+    Get our aesthetics features by reading each frame's numpy filename
+    """
 
     print("[INFO] Extracting features from {:,} videos...".format(len(videos)))
 
@@ -33,6 +36,7 @@ def get_aesthetics(videos, aesthetics_path):
 
 
 def train_our_aesthetics(train_videos, val_videos, aesthetics_path):
+    """ Get our aesthetics features for training and validation sets """
 
     X_train = get_aesthetics(train_videos, aesthetics_path)
     X_val = get_aesthetics(val_videos, aesthetics_path)
@@ -41,6 +45,7 @@ def train_our_aesthetics(train_videos, val_videos, aesthetics_path):
 
 
 def videos_to_our_aesthetics(videos, aesthetics_path):
+    """ Get our aesthetics features for a given set of videos """
     
     features = get_aesthetics(videos, aesthetics_path)
 

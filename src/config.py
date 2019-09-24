@@ -23,7 +23,7 @@ FEATURES_WEIGHTS = {
 
 # GRID SEARCH
 GRID_SEARCH = False
-# Features Algorithms
+# Dictionary that indicates which model to apply Grid Search on
 FEATURES_ALGORITHM = {
     'C3D': 'Bayesian Ridge',
     'AESTHETICS': 'Bayesian Ridge',
@@ -47,25 +47,20 @@ ENCODING_ALGORITHM = {
 EMBEDDINGS_TRAINING = False
 # Model's path
 EMBEDDINGS_MODEL = {
-    # 'short': 'logs/run-2019-09-20_17-11-45/checkpoints/weights-fold_0-79-0.0048722358.hdf5',
-    'short': '/datasets/previous_runs/checkpoints/run-2019-09-03_16-40-09/weights-fold_0-97-0.0051547588.hdf5',
-    'long': 'logs/run-2019-09-19_17-03-42/checkpoints/weights-fold_0-188-0.0198000782.hdf5'
+    'short': 'models/captions-embeddings-short-weights-97-0.0051547588.hdf5',
+    'long': 'models/captions-embeddings-long-weights-188-0.0198000782.hdf5'
 }
-# 'logs/run-2019-09-19_16-42-25/checkpoints/weights-fold_0-47-0.0197818204.hdf5' 
-# 'logs/run-2019-09-16_16-10-58/checkpoints/weights-fold_0-23-0.0203232624.hdf5'
-# long-term: 'logs/run-2019-09-16_16-10-58/checkpoints/weights-fold_0-23-0.0203232624.hdf5'
-# short-term: 'checkpoints/run-2019-09-03_16-40-09/weights-fold_0-97-0.0051547588.hdf5'
 
 # PRE-TRAINED CNN
 PRE_TRAINED_NN = 'ResNet152'
 
 # FINE-TUNED CNN
 FINE_TUNE_EVALUATE_ONLY = True
-FINE_TUNED_MODEL = 'logs/run-2019-09-18_12-42-36/checkpoints/weights-part_1-01-0.0223143869.hdf5'
+FINE_TUNED_MODEL = 'models/fine-tuned-cnn-weights-01-0.0223143869.hdf5'
 
 # EMOTIONS NN
 EMOTIONS_NN = True
-EMOTIONS_MODEL = 'logs/run-2019-09-19_14-26-02/checkpoints/emotions-weights-fold_0-13-0.0458815261.hdf5'
+EMOTIONS_MODEL = 'models/emotions-weights-13-0.0458815261.hdf5'
 
 # CURRENT DIR
 current_dir_path = os.path.dirname(os.path.realpath(__file__))

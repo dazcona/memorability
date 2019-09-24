@@ -17,15 +17,15 @@ These videos come with a set of pre-extracted features, such as: Dense SIFT, HoG
 ## Technologies used in our work
 
 * [Python 3](https://www.python.org/)
+* [Docker](https://www.docker.com/)
+* [keras](https://keras.io)
+* [tensorflow](https://www.tensorflow.org/)
 * [numpy](http://www.numpy.org)
 * [pandas](https://pandas.pydata.org/)
 * [matplotlib](https://matplotlib.org/)
 * [scikit-learn](https://scikit-learn.org/)
 * [pillow](https://pillow.readthedocs.io/)
-* [keras](https://keras.io)
-* [tensorflow](https://www.tensorflow.org/)
 * [jupyter](https://jupyter.org/)
-* [Docker](https://www.docker.com/)
 * [HDF5](https://www.h5py.org/)
 
 ## Our Results
@@ -50,7 +50,7 @@ volumes:
   - /Volumes/HDD/datasets/:/datasets
 ```
 
-3. Build the docker image:
+3. Build our docker image:
 ```
 $ cd docker
 $ make build
@@ -66,12 +66,12 @@ $ make run
 $ make dev
 ```
 
-6. Extract frames from videos:
+6. Extract frames from videos (one per second, resulting in 8 frames per video for both dev and test sets):
 ```
 $ python src/extract_frames.py
 ```
 
-6. Extract emotion features from frames:
+6. Extract emotion features from frames (run this command in a separate repo, see instructions [here](https://github.com/dazcona/face-classifier)):
 ```
 $ python src/extract_emotions.py
 ```
@@ -82,18 +82,27 @@ $ python src/extract_emotions.py
 ```
 $ python src/train.py
 ```
+Running the train script for one or several feature/s creates the corresponding predictions stored in *predictions/training/*. 
 
-9. Run the test:
+9. Find the best ensemble models. You can manually apply weights to each desired model's predictions or run the automated search for the best weights (by creating bins):
+```
+$ python src/ensemble_manual.py
+$ python src/ensemble_auto.py
+```
+
+10. Run the test:
 ```
 $ python src/test.py
 ```
+After running the test script, models are trained with all the training data available (8,000 videos) and the predictions for the test set are stored in *predictions/test/*
 
-10. Run submission generation:
+11. Run submission generation:
 ```
 $ python src/submit.py
 ```
+The ensemble weights are manually defined and the CSV submissions are generated for 5 runs for each subtask: short-term and long-term memorability scores.
 
-11. [Optional] Visualizing heatmaps of class activation:
+12. [Optional] Visualizing heatmaps of class activation:
 ```
 $ python src/viz_activations.py --model ResNet152
 ```
@@ -111,13 +120,12 @@ $ python src/viz_activations.py --model ResNet152
 
 ## Visualization: Activation Maps
 
-Model ResNet152 trained with ImageNet was leveraged for the video-frame 48 of the top short-term and long-term most memorable videos. This is very useful for understanding which parts of these given images led the pre-trained CNN to the ImageNet classification. This technique is called *class activation map* (CAM) visualization and consists of producing heatmaps of class activation over input images. For further details see Francois Chollet's Deep Learning with Python book.
+Model ResNet152 trained with ImageNet was leveraged for one of the video frames (frame 48) of the top short-term and long-term most memorable videos. This is very useful for understanding which parts of these given images led the pre-trained CNN to the ImageNet classification. This technique is called *class activation map* (CAM) visualization and consists of producing heatmaps of class activation over input images. For further details see Francois Chollet's Deep Learning with Python book.
 
 ### Top short-term most memorable videos
 
-1. **video798.webm**
+1. **video798.webm**. The top-4 classes predicted for this video frame are as follows: 
 
-The top-4 classes predicted for this video frame are as follows: 
 * 'torch': 0.23151287 (with 23.25% probability)
 * 'hatchet': 0.094463184 (with 9.44% probability)
 * 'crutch': 0.0654099 (with 6.54% probability)
@@ -125,7 +133,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video798-frame-48_CAM.jpg)
 
-2. **video1981.webm**
+2. **video1981.webm**:
 
 * 'bow_tie': 0.99436283
 * 'torch': 0.0010983162
@@ -136,7 +144,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video1981-frame-48_CAM.jpg)
 
-3. **video4903.webm**
+3. **video4903.webm**:
 
 * 'television': 0.5428618
 * 'desktop_computer': 0.115691125
@@ -147,7 +155,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video4903-frame-48_CAM.jpg)
 
-4. **video9496.webm**
+4. **video9496.webm**:
 
 * 'sandbar': 0.55648345
 * 'seashore': 0.13317421
@@ -157,7 +165,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video9496-frame-48_CAM.jpg)
 
-5. **video6103.webm**
+5. **video6103.webm**:
 
 * 'fur_coat': 0.66497004
 * 'cloak': 0.16292651
@@ -168,7 +176,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ### Top long-term most memorable videos
 
-1. **video5186.webm**
+1. **video5186.webm**:
 
 * 'mountain_bike': 0.8176742
 * 'bicycle-built-for-two': 0.1651485
@@ -177,7 +185,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video5186-frame-48_CAM.jpg)
 
-2. **video4798.webm**
+2. **video4798.webm**:
 
 * 'jean': 0.64808583
 * 'cash_machine': 0.06661992
@@ -187,7 +195,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video4798-frame-48_CAM.jpg)
 
-3. **video480.webm**
+3. **video480.webm**:
 
 * 'giant_schnauzer': 0.28221375
 * 'cocker_spaniel': 0.172711
@@ -198,7 +206,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video480-frame-48_CAM.jpg)
 
-4. **video7606.webm**
+4. **video7606.webm**:
 
 * 'chain_saw': 0.15715672
 * 'pole': 0.099422
@@ -208,7 +216,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video7606-frame-48_CAM.jpg)
 
-5. **video4809.webm**
+5. **video4809.webm**:
 
 * 'racket': 0.9964013
 * 'tennis_ball': 0.0032226138
@@ -246,3 +254,7 @@ The top-4 classes predicted for this video frame are as follows:
 ### Training the final model
 
 * How to Train a Final Machine Learning Model: https://machinelearningmastery.com/train-final-machine-learning-model/
+
+### Miscellaneous
+
+* Five video classification methods implemented in Keras and TensorFlow: https://blog.coast.ai/five-video-classification-methods-implemented-in-keras-and-tensorflow-99cad29cc0b5

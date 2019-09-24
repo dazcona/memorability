@@ -13,7 +13,6 @@ from keras.callbacks import TensorBoard, ModelCheckpoint
 from keras.models import load_model
 from keras import regularizers
 import matplotlib.pyplot as plt
-# import keras.backend as K
 import pickle
 
 NUM_UNITS = 64
@@ -170,18 +169,6 @@ def train_embeddings_network(train_captions, y_train, validation_captions, y_val
         plt.ylabel("Loss/MSE")
         plt.legend()
         plt.savefig('{}/embeddings_loss_vs_MSE.png'.format(config.RUN_LOG_FOLD_DIR.format(fold)))
-
-        ## PLOT EVALUATION
-
-        # print('[INFO] Plotting true values vs predicted values...')
-        # font = { 'family': 'DejaVu Sans', 'weight': 'bold', 'size': 15 }
-        # plt.rc('font', **font)
-        # plt.figure(figsize=(12, 10), dpi=100)
-        # plt.scatter(y_val, predicted, c="b", alpha=0.25)
-        # plt.title("True values vs Predicted values")
-        # plt.xlabel("True values")
-        # plt.ylabel("Predicted values")
-        # plt.savefig('{}/true_vs_predicted.png'.format(config.RUN_LOG_FOLD_DIR.format(fold)))
 
     ## LOAD MODEL
 
