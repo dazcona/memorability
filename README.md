@@ -1,17 +1,13 @@
 # Insight@DCU in the Memorability Challenge at MediaEval2019
 
-<<<<<<< HEAD
 [Slides at MediaEval2019](https://docs.google.com/presentation/d/12ar0BFb27I9OsFZM2y9oqLLeSPi0TljWqEuMVIeepkU/) that include: 
 * Our approaches & the features we computed (e.g. emotions)
 * Our results on our validation set and on the official test set
 * Visualization techniques such as Class Activation Maps for CNNs
 * [Table with Results](https://docs.google.com/spreadsheets/d/1LrenTHNGRZzCHYluYl2YPdmlHuUsTJSMhUIb1X91hdk/edit?usp=drive_web&ouid=100420670696373997922)
 * Ensembles: [short-term table](https://docs.google.com/spreadsheets/d/1ToQoHWf3xvJRG-Imi-mtY7gym1p47M4g4htAkxSxFcU/edit#gid=287676692) & [long-term table](https://docs.google.com/spreadsheets/d/1CxyFeBVttJCmscKNHsOLun7bsxIuxhbrUwYSUoF-DVU/edit#gid=286590362)
-=======
-The Predicting Media Memorability Task focuses on the problem of **predicting how memorable a video is to viewers**. It requires participants to automatically predict memorability scores for videos that reflect the probability a video will be remembered. 
 
 ![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fdazcona%2Fmemorability)
->>>>>>> 606b86278e0f8e1353b8733f9dd6836c5108f798
 
 ## Challenge
 
@@ -21,7 +17,6 @@ Problem: Predicting how memorable a video is to viewers i.e. the probability a v
 
 ## Dataset
 
-<<<<<<< HEAD
 10,000 soundless short videos extracted from raw footage used by professionals when creating content, and in particular, commercials. Each video has two scores for memorability: short-term and long-term (that refer to its probability to be remembered after two different durations of memory retention).
 
 10,000 videos: 8,000 development & 2,000 official test
@@ -50,23 +45,7 @@ Individual models per set of features & then combine them using ensemble models 
 * Fine-tuning our own CNN: ResNet - head + FC + sigmoid
 * Ensemble models: combinations of individual models’ predictions
 
-### Why emotions?
-
-MediaEval 2018: Duy-Tue Tran-Van et al @ HCMUS’s paper: "Predicting Media Memorability Using Deep Features and Recurrent Network"
-
-**Long-term scores: 0.727 (left), 0.273 (right)**
-![](figures/emotions/Duy-Tue_Tran-Van_HCMUS.png)
-
-### Our pre-computed Emotion features:
-
-7 emotions: anger, disgust, fear, happiness, sadness, surprise, neutral; gender scores & spatial information
-
-![](figures/emotions/emotions.png)
-=======
-10,000 (soundless) short videos extracted from raw footage used by professionals when creating content
-Each video is associated with two scores of memorability that refer to its probability to be remembered after two different durations of memory retention. 
-
-Videos come with a set of pre-computed features.
+### Pre-computed Features
 
 Video specialized features:
 * C3D (dimension: 101 features): final classification layer of the C3D model
@@ -81,9 +60,21 @@ Frame features, from three key-frames (first (0), one-third (56) and two-thirds 
 * Aesthetic visual features: collection of features used in the prediction of visual aesthetics, composed of color, texture and object based descriptors
 
 At Insight@DCU, we also extracted the following:
-* Emotions: 7 emotions (anger, disgust, fear, happiness, sadness, surprise, neutral), gender scores and spatial information
+* Our own emotions
 * Our own aesthetic visual features
->>>>>>> 606b86278e0f8e1353b8733f9dd6836c5108f798
+
+### Why emotions?
+
+MediaEval 2018: Duy-Tue Tran-Van et al @ HCMUS’s paper: "Predicting Media Memorability Using Deep Features and Recurrent Network"
+
+**Long-term scores: 0.727 (left), 0.273 (right)**
+![](figures/emotions/Duy-Tue_Tran-Van_HCMUS.png)
+
+### Our pre-computed Emotion features:
+
+7 emotions: anger, disgust, fear, happiness, sadness, surprise, neutral; gender scores & spatial information
+
+![](figures/emotions/emotions.png)
 
 ## Technologies used in our work
 
