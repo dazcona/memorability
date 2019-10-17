@@ -74,7 +74,7 @@ MediaEval 2018: Duy-Tue Tran-Van et al @ HCMUS’s paper: "Predicting Media Memo
 
 7 emotions: anger, disgust, fear, happiness, sadness, surprise, neutral; gender scores & spatial information
 
-![](figures/emotions/emotions.png)
+![](figures/emotions/emotions.jpeg)
 
 ## Technologies used in our work
 
@@ -176,7 +176,7 @@ $ python src/viz_activations.py --model ResNet152
 3. **Ensemble Features for the 5 runs each**
 ![](figures/tables/Table_3.png)
 
-## Visualization
+## Visualizations
 
 1. **Short-term and long-term Memorability Histograms**
 ![](figures/EDA/Exploring_Short_and_Long_Memorability_histograms.png)
