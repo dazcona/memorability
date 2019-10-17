@@ -3,6 +3,7 @@ from scipy.stats import spearmanr
 
 
 def evaluate_spearman(true, predicted):
+    """ Evaluate using Spearman correlation """
 
     return spearmanr(true, predicted)
 

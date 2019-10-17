@@ -73,7 +73,7 @@ if __name__ == "__main__":
         if weight > 0:
             print("[INFO] Reading: {} with weight: {}".format(filename, weight))
             predictions.append(
-                np.load(os.path.join('predictions/training', filename)) * weight
+                np.load(os.path.join(config.PREDICTIONS_TRAIN, filename)) * weight
             )
     predictions = np.sum(predictions, axis=0)
 

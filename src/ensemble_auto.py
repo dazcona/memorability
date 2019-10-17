@@ -70,9 +70,14 @@ if __name__ == "__main__":
             'long-term_memorability_emotions_ML.npy',
         ]
     }
-    # Removed: 'long-term_memorability_pretrained_ResNet50.npy', 'long-term_memorability_fine_tuned.npy'
-    # 'long-term_memorability_AESTHETICS.npy', 'long-term_memorability_ColorHistogram.npy',
-    # Removed: 'short-term_memorability_pretrained_ResNet50.npy', 'short-term_memorability_AESTHETICS.npy',
+    # Removed: 
+    #   'long-term_memorability_pretrained_ResNet50.npy', 
+    #   'long-term_memorability_fine_tuned.npy'
+    #   'long-term_memorability_AESTHETICS.npy', 
+    #   'long-term_memorability_ColorHistogram.npy',
+    # Removed: 
+    #   'short-term_memorability_pretrained_ResNet50.npy', 
+    #   'short-term_memorability_AESTHETICS.npy',
 
     N_FILES = 20
 
@@ -93,7 +98,7 @@ if __name__ == "__main__":
 
                 weight = times * 1. / N_FILES
                 predictions.append(
-                    np.load(os.path.join('predictions/training/', my_filename)) * weight
+                    np.load(os.path.join(config.PREDICTIONS_TRAIN, my_filename)) * weight
                 )
 
                 short_name = my_filename.split(target + '_')[1].split('.npy')[0].replace('pretrained_', '').replace('_embeddings', '').title()

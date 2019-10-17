@@ -99,6 +99,7 @@ def get_emotions_data(train_videos, val_videos, emotions_path):
 
 
 def get_emotions_test_data(videos, emotions_path, dev_or_test):
+    """ Get emotion features """
 
     print('[INFO] Testing data...')
     X_emotions_filename = '{}/emotions_{}.npy'.format(config.MY_FEATURES_DIR, dev_or_test)

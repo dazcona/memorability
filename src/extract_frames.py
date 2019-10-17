@@ -15,6 +15,7 @@ if not os.path.exists(config.TEST_FRAMES):
 
 
 def store_frames(videos, sources_path, frames_path):
+    """ Extract and store frames from videos """
 
     for video_name in videos:
         

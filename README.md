@@ -1,11 +1,17 @@
 # Insight@DCU in the Memorability Challenge at MediaEval2019
 
+<<<<<<< HEAD
 [Slides at MediaEval2019](https://docs.google.com/presentation/d/12ar0BFb27I9OsFZM2y9oqLLeSPi0TljWqEuMVIeepkU/) that include: 
 * Our approaches & the features we computed (e.g. emotions)
 * Our results on our validation set and on the official test set
 * Visualization techniques such as Class Activation Maps for CNNs
 * [Table with Results](https://docs.google.com/spreadsheets/d/1LrenTHNGRZzCHYluYl2YPdmlHuUsTJSMhUIb1X91hdk/edit?usp=drive_web&ouid=100420670696373997922)
 * Ensembles: [short-term table](https://docs.google.com/spreadsheets/d/1ToQoHWf3xvJRG-Imi-mtY7gym1p47M4g4htAkxSxFcU/edit#gid=287676692) & [long-term table](https://docs.google.com/spreadsheets/d/1CxyFeBVttJCmscKNHsOLun7bsxIuxhbrUwYSUoF-DVU/edit#gid=286590362)
+=======
+The Predicting Media Memorability Task focuses on the problem of **predicting how memorable a video is to viewers**. It requires participants to automatically predict memorability scores for videos that reflect the probability a video will be remembered. 
+
+![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fdazcona%2Fmemorability)
+>>>>>>> 606b86278e0f8e1353b8733f9dd6836c5108f798
 
 ## Challenge
 
@@ -15,6 +21,7 @@ Problem: Predicting how memorable a video is to viewers i.e. the probability a v
 
 ## Dataset
 
+<<<<<<< HEAD
 10,000 soundless short videos extracted from raw footage used by professionals when creating content, and in particular, commercials. Each video has two scores for memorability: short-term and long-term (that refer to its probability to be remembered after two different durations of memory retention).
 
 10,000 videos: 8,000 development & 2,000 official test
@@ -55,19 +62,41 @@ MediaEval 2018: Duy-Tue Tran-Van et al @ HCMUS’s paper: "Predicting Media Memo
 7 emotions: anger, disgust, fear, happiness, sadness, surprise, neutral; gender scores & spatial information
 
 ![](figures/emotions/emotions.png)
+=======
+10,000 (soundless) short videos extracted from raw footage used by professionals when creating content
+Each video is associated with two scores of memorability that refer to its probability to be remembered after two different durations of memory retention. 
+
+Videos come with a set of pre-computed features.
+
+Video specialized features:
+* C3D (dimension: 101 features): final classification layer of the C3D model
+* HMP (6075 features): histogram of motion patterns for each video
+
+Frame features, from three key-frames (first (0), one-third (56) and two-thirds (112)) on each video:
+* HoG descriptors: histograms of oriented gradients
+* LBP: local texture information
+* InceptionV3: output of the fc7layer of the InceptionV3 deep network
+* ORB (An efficient alternative to SIFT or SURF): Oriented FAST and Rotated BRIEF
+* Color Histogram: classic color histogram (three channels)
+* Aesthetic visual features: collection of features used in the prediction of visual aesthetics, composed of color, texture and object based descriptors
+
+At Insight@DCU, we also extracted the following:
+* Emotions: 7 emotions (anger, disgust, fear, happiness, sadness, surprise, neutral), gender scores and spatial information
+* Our own aesthetic visual features
+>>>>>>> 606b86278e0f8e1353b8733f9dd6836c5108f798
 
 ## Technologies used in our work
 
 * [Python 3](https://www.python.org/)
+* [Docker](https://www.docker.com/)
+* [keras](https://keras.io)
+* [tensorflow](https://www.tensorflow.org/)
 * [numpy](http://www.numpy.org)
 * [pandas](https://pandas.pydata.org/)
 * [matplotlib](https://matplotlib.org/)
 * [scikit-learn](https://scikit-learn.org/)
 * [pillow](https://pillow.readthedocs.io/)
-* [keras](https://keras.io)
-* [tensorflow](https://www.tensorflow.org/)
 * [jupyter](https://jupyter.org/)
-* [Docker](https://www.docker.com/)
 * [HDF5](https://www.h5py.org/)
 
 ## Our Deployment
@@ -88,7 +117,7 @@ volumes:
   - /Volumes/HDD/datasets/:/datasets
 ```
 
-3. Build the docker image:
+3. Build our docker image:
 ```
 $ cd docker
 $ make build
@@ -104,12 +133,12 @@ $ make run
 $ make dev
 ```
 
-6. Extract frames from videos:
+6. Extract frames from videos (one per second, resulting in 8 frames per video for both dev and test sets):
 ```
 $ python src/extract_frames.py
 ```
 
-6. Extract emotion features from frames:
+6. Extract emotion features from frames (run this command in a separate repo, see instructions [here](https://github.com/dazcona/face-classifier)):
 ```
 $ python src/extract_emotions.py
 ```
@@ -120,18 +149,27 @@ $ python src/extract_emotions.py
 ```
 $ python src/train.py
 ```
+Running the train script for one or several feature/s creates the corresponding predictions stored in *predictions/training/*. 
 
-9. Run the test:
+9. Find the best ensemble models. You can manually apply weights to each desired model's predictions or run the automated search for the best weights (by creating bins):
+```
+$ python src/ensemble_manual.py
+$ python src/ensemble_auto.py
+```
+
+10. Run the test:
 ```
 $ python src/test.py
 ```
+After running the test script, models are trained with all the training data available (8,000 videos) and the predictions for the test set are stored in *predictions/test/*
 
-10. Run submission generation:
+11. Run submission generation:
 ```
 $ python src/submit.py
 ```
+The ensemble weights are manually defined and the CSV submissions are generated for 5 runs for each subtask: short-term and long-term memorability scores.
 
-11. [Optional] Visualizing heatmaps of class activation:
+12. [Optional] Visualizing heatmaps of class activation:
 ```
 $ python src/viz_activations.py --model ResNet152
 ```
@@ -170,13 +208,12 @@ $ python src/viz_activations.py --model ResNet152
 
 ## Extra: Activation Maps for CNNs
 
-Model ResNet152 trained with ImageNet was leveraged for the video-frame 48 of the top short-term and long-term most memorable videos. This is very useful for understanding which parts of these given images led the pre-trained CNN to the ImageNet classification. This technique is called *class activation map* (CAM) visualization and consists of producing heatmaps of class activation over input images. For further details see Francois Chollet's Deep Learning with Python book.
+Model ResNet152 trained with ImageNet was leveraged for one of the video frames (frame 48) of the top short-term and long-term most memorable videos. This is very useful for understanding which parts of these given images led the pre-trained CNN to the ImageNet classification. This technique is called *class activation map* (CAM) visualization and consists of producing heatmaps of class activation over input images. For further details see Francois Chollet's Deep Learning with Python book.
 
 ### Top short-term most memorable videos
 
-1. **video798.webm**
+1. **video798.webm**. The top-4 classes predicted for this video frame are as follows: 
 
-The top-4 classes predicted for this video frame are as follows: 
 * 'torch': 0.23151287 (with 23.25% probability)
 * 'hatchet': 0.094463184 (with 9.44% probability)
 * 'crutch': 0.0654099 (with 6.54% probability)
@@ -184,7 +221,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video798-frame-48_CAM.jpg)
 
-2. **video1981.webm**
+2. **video1981.webm**:
 
 * 'bow_tie': 0.99436283
 * 'torch': 0.0010983162
@@ -195,7 +232,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video1981-frame-48_CAM.jpg)
 
-3. **video4903.webm**
+3. **video4903.webm**:
 
 * 'television': 0.5428618
 * 'desktop_computer': 0.115691125
@@ -206,7 +243,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video4903-frame-48_CAM.jpg)
 
-4. **video9496.webm**
+4. **video9496.webm**:
 
 * 'sandbar': 0.55648345
 * 'seashore': 0.13317421
@@ -216,7 +253,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video9496-frame-48_CAM.jpg)
 
-5. **video6103.webm**
+5. **video6103.webm**:
 
 * 'fur_coat': 0.66497004
 * 'cloak': 0.16292651
@@ -227,7 +264,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ### Top long-term most memorable videos
 
-1. **video5186.webm**
+1. **video5186.webm**:
 
 * 'mountain_bike': 0.8176742
 * 'bicycle-built-for-two': 0.1651485
@@ -236,7 +273,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video5186-frame-48_CAM.jpg)
 
-2. **video4798.webm**
+2. **video4798.webm**:
 
 * 'jean': 0.64808583
 * 'cash_machine': 0.06661992
@@ -246,7 +283,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video4798-frame-48_CAM.jpg)
 
-3. **video480.webm**
+3. **video480.webm**:
 
 * 'giant_schnauzer': 0.28221375
 * 'cocker_spaniel': 0.172711
@@ -257,7 +294,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video480-frame-48_CAM.jpg)
 
-4. **video7606.webm**
+4. **video7606.webm**:
 
 * 'chain_saw': 0.15715672
 * 'pole': 0.099422
@@ -267,7 +304,7 @@ The top-4 classes predicted for this video frame are as follows:
 
 ![](figures/activation_maps/video7606-frame-48_CAM.jpg)
 
-5. **video4809.webm**
+5. **video4809.webm**:
 
 * 'racket': 0.9964013
 * 'tennis_ball': 0.0032226138
@@ -305,3 +342,7 @@ The top-4 classes predicted for this video frame are as follows:
 ### Training the final model
 
 * How to Train a Final Machine Learning Model: https://machinelearningmastery.com/train-final-machine-learning-model/
+
+### Miscellaneous
+
+* Five video classification methods implemented in Keras and TensorFlow: https://blog.coast.ai/five-video-classification-methods-implemented-in-keras-and-tensorflow-99cad29cc0b5
