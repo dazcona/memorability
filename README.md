@@ -1,18 +1,60 @@
 # Insight@DCU in the Memorability Challenge at MediaEval2019
 
-This task focuses on the problem of predicting how memorable a video is to viewers. It requires participants to automatically predict memorability scores for videos that reflect the probability a video will be remembered. 
-
-Task participants are provided with an extensive dataset of videos that are accompanied by memorability annotations, as well as pre-extracted state-of-the-art visual features. The ground truth has been collected through recognition tests, and thus results from objective measurement of memory performance. Participants will be required to train computational models capable of inferring video memorability from visual content. Optionally, descriptive titles attached to the videos may be used. Models will be evaluated through standard evaluation metrics used in ranking tasks (Spearman’s rank correlation). The data set used in 2019, is the same as in 2018 (2018’s testset ground truth data has not been released). This year the task focuses on understanding the patterns in the data and improving the ability of algorithms to capture those patterns.
+[Slides at MediaEval2019](https://docs.google.com/presentation/d/12ar0BFb27I9OsFZM2y9oqLLeSPi0TljWqEuMVIeepkU/) that include: 
+* Our approaches & the features we computed (e.g. emotions)
+* Our results on our validation set and on the official test set
+* Visualization techniques such as Class Activation Maps for CNNs
+* [Table with Results](https://docs.google.com/spreadsheets/d/1LrenTHNGRZzCHYluYl2YPdmlHuUsTJSMhUIb1X91hdk/edit?usp=drive_web&ouid=100420670696373997922)
+* Ensembles: [short-term table](https://docs.google.com/spreadsheets/d/1ToQoHWf3xvJRG-Imi-mtY7gym1p47M4g4htAkxSxFcU/edit#gid=287676692) & [long-term table](https://docs.google.com/spreadsheets/d/1CxyFeBVttJCmscKNHsOLun7bsxIuxhbrUwYSUoF-DVU/edit#gid=286590362)
 
 ## Challenge
 
-http://www.multimediaeval.org/mediaeval2019/memorability/
+The Memorability challenge is [here](http://www.multimediaeval.org/mediaeval2019/memorability/).
+
+Problem: Predicting how memorable a video is to viewers i.e. the probability a video will be remembered. 
 
 ## Dataset
 
-The dataset is composed of 10,000 (soundless) short videos extracted from raw footage used by professionals when creating content, and in particular, commercials. Each video consists of a coherent unit in terms of meaning and is associated with two scores of memorability that refer to its probability to be remembered after two different durations of memory retention. 
+10,000 soundless short videos extracted from raw footage used by professionals when creating content, and in particular, commercials. Each video has two scores for memorability: short-term and long-term (that refer to its probability to be remembered after two different durations of memory retention).
 
-These videos come with a set of pre-extracted features, such as: Dense SIFT, HoG descriptors, LBP, GIST, Color Histogram, MFCC, Fc7 layer from AlexNet, C3D features, etc.
+10,000 videos: 8,000 development & 2,000 official test
+
+## Our approach
+
+**Development: 7,000 our training & 1,000 our validation**
+
+**Extract 8 frames per video (first + one per second)**
+
+Individual models per set of features & then combine them using ensemble models using:
+* Traditional Machine Learning:
+  - Support Vector Regression
+  - Bayesian Ridge Regression
+* Deep Learning (highly regularized):
+  - Embeddings for words (captions)
+  - Transfer Learning w/ Neural Network activations as features 
+  - Transfer Learning by fine-tuning our own networks
+
+### Our models:
+
+* Off the shelf pre-computed features: C3D, HMP, LBP, InceptionV3, Color Histogram & Aesthetic
+* Our own pre-computed features: Our Aesthetics & Emotions
+* Textual information: bag-of-words TF-IDF with linear models & Glove's Embeddings + RNN GRU + high dropout
+* Pre-trained CNNs as feature extractors: transfer learning with ImageNet: VGG16, DenseNet121, ResNet50 & ResNet152
+* Fine-tuning our own CNN: ResNet - head + FC + sigmoid
+* Ensemble models: combinations of individual models’ predictions
+
+### Why emotions?
+
+MediaEval 2018: Duy-Tue Tran-Van et al @ HCMUS’s paper: "Predicting Media Memorability Using Deep Features and Recurrent Network"
+
+**Long-term scores: 0.727 (left), 0.273 (right)**
+![](figures/emotions/Duy-Tue_Tran-Van_HCMUS.png)
+
+### Our pre-computed Emotion features:
+
+7 emotions: anger, disgust, fear, happiness, sadness, surprise, neutral; gender scores & spatial information
+
+![](figures/emotions/emotions.png)
 
 ## Technologies used in our work
 
@@ -27,10 +69,6 @@ These videos come with a set of pre-extracted features, such as: Dense SIFT, HoG
 * [jupyter](https://jupyter.org/)
 * [Docker](https://www.docker.com/)
 * [HDF5](https://www.h5py.org/)
-
-## Our Results
-
-See the following [table](https://docs.google.com/spreadsheets/d/1LrenTHNGRZzCHYluYl2YPdmlHuUsTJSMhUIb1X91hdk/)
 
 ## Our Deployment
 
@@ -98,18 +136,39 @@ $ python src/submit.py
 $ python src/viz_activations.py --model ResNet152
 ```
 
-## EDA: Exploring features & captions
+## Our Results
 
-1. **Short-term and long-term memorability histograms**
+1. **Validation Results on our Individual Models:**
+![](figures/tables/Table_1.png)
+
+2. **Ensemble Results for the 5 runs each**
+![](figures/tables/Table_2.png)
+
+3. **Ensemble Features for the 5 runs each**
+![](figures/tables/Table_3.png)
+
+## Visualization
+
+1. **Short-term and long-term Memorability Histograms**
 ![](figures/EDA/Exploring_Short_and_Long_Memorability_histograms.png)
 
-2. **Exploring top captions**
+2. **Exploring Top Captions**
 ![](figures/EDA/Exploring_Wordclouds_Top_50_Videos_Captions.png)
 
-3. **Exploring bottom captions**
+3. **Exploring Bottom Captions**
 ![](figures/EDA/Exploring_Wordclouds_Bottom_50_Videos_Captions.png)
 
-## Visualization: Activation Maps
+## Findings & Contributions
+
+* **DL CNN models** will typically outperform models trained with **captions** and other visual features for short-term memorability; however, techniques such as **embeddings** and RNNs can achieve very high results for captions
+
+* We believe **fine-tuned CNN models** will outperform pre-trained models as feature extractors given enough training samples (**not proven** in this paper)
+
+* **Ensembling models by using predictions** instead of training models with very long vectors of features is an alternative we used to counteract **memory limitations**
+
+* **Ensembling models with different modalities** such as emotions with captions, high-level representations from CNNs and visual pre-computed features achieve the best results as they **represent different high-level abstractions**
+
+## Extra: Activation Maps for CNNs
 
 Model ResNet152 trained with ImageNet was leveraged for the video-frame 48 of the top short-term and long-term most memorable videos. This is very useful for understanding which parts of these given images led the pre-trained CNN to the ImageNet classification. This technique is called *class activation map* (CAM) visualization and consists of producing heatmaps of class activation over input images. For further details see Francois Chollet's Deep Learning with Python book.
 
