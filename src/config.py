@@ -2,7 +2,7 @@ import os
 import datetime
 
 # Column to predict
-TARGET_SHORT_NAME = 'short' # 'short' or 'long'
+TARGET_SHORT_NAME = 'long' # 'short' or 'long'
 TARGET = '{}-term_memorability'.format(TARGET_SHORT_NAME)
 # Target columns
 TARGET_COLS = [ 'short-term_memorability', 'nb_short-term_annotations', 'long-term_memorability', 'nb_long-term_annotations' ]
@@ -13,8 +13,8 @@ FEATURES_WEIGHTS = {
     'HMP': 0,
     'ColorHistogram': 0,
     'LBP': 0,
-    'InceptionV3': 0,
-    'CAPTIONS': 1,
+    'InceptionV3': 1,
+    'CAPTIONS': 0,
     'PRE-TRAINED NN': 0,
     'FINE-TUNED NN': 0,
     'Emotions': 0,
@@ -22,7 +22,7 @@ FEATURES_WEIGHTS = {
 }
 
 # GRID SEARCH
-GRID_SEARCH = False
+GRID_SEARCH = True
 # Dictionary that indicates which model to apply Grid Search on
 FEATURES_ALGORITHM = {
     'C3D': 'Bayesian Ridge',
