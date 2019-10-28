@@ -1,0 +1,53 @@
+version: '2.3'
+
+services:
+
+  my_container:
+    image: my_image
+    container_name: my_container
+    working_dir: /code
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+
+# Setup environment variables:
+    environment:
+      - PYTHONPATH=/code
+      # Uncomment the following line to plot images on Linux
+      #- DISPLAY=unix$DISPLAY
+      # Set a password to your Jupyter Notebook
+      #- PASSWORD=testpass
+      
+# Setup the ports you want to expose:
+    ports:
+      # Jupyter port
+      - "8888:8888"
+
+# Setup the volumes you want to share:
+    volumes:
+      - ../:/code
+      # - /media/DavidHDD/memorability/campus.pub.ro/:/datasets
+      - /media/enric/7c7b26fc-7eaf-4a2a-8ca5-33cfda8fe970/:/datasets
+      #Share the webcam with the container
+      #- /dev/video0:/dev/video0
+      # Uncomment the following line to plot images on Linux
+      #- /tmp/.X11-unix:/tmp/.X11-unix
+
+# Uncomment the following line to use an NVIDIA GPU (requires nvidia-docker)
+    runtime: nvidia
+
+# By default this container stay alive without running any command 
+    command: tail /dev/null -f
+# If installed, you can start Jupyter Notebook every time you run the container
+    #command: jupyter notebook --allow-root --ip=0.0.0.0
+
+# Start a Tensorboard on localhost:6006 that process the logs folder
+  tensorboard:
+    image: tensorflow/tensorflow
+    container_name: tensorboard
+    working_dir: /logs
+    ports:
+     - "6006:6006"
+    volumes:
+      - ../logs:/logs
+    command: tensorboard --logdir /logs # --port=6007
