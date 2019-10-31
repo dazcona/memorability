@@ -7,17 +7,35 @@
 * [Table with Results](https://docs.google.com/spreadsheets/d/1LrenTHNGRZzCHYluYl2YPdmlHuUsTJSMhUIb1X91hdk/edit?usp=drive_web&ouid=100420670696373997922)
 * Ensembles: [short-term table](https://docs.google.com/spreadsheets/d/1ToQoHWf3xvJRG-Imi-mtY7gym1p47M4g4htAkxSxFcU/edit#gid=287676692) & [long-term table](https://docs.google.com/spreadsheets/d/1CxyFeBVttJCmscKNHsOLun7bsxIuxhbrUwYSUoF-DVU/edit#gid=286590362)
 
+[Paper](https://www.eigen.no/MediaEval_19_paper_15.pdf): Predicting Media Memorability Using Ensemble Models
+
 ![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fdazcona%2Fmemorability)
 
 Please consider citing this paper if you use any of the work:
 ```
-@article{azcona2019,
+@article{azcona2019predicting,
   title={Predicting Media Memorability Using Ensemble Models},
-  author={Azcona, David and Moreu, Enric and Hu, Feiyan and Ward, Tom{\'a}s E and Smeaton, Alan F },
+  author={Azcona, David and Moreu, Enric and Hu, Feiyan and Ward, Tom{\'a}s E and Smeaton, Alan F},
   year={2019},
   publisher={CEUR-WS}
 }
 ```
+
+**Update:** We are pleased to report we performed very well in Predicting Media Memorability at MultimediaEval Benchmarking, improving SOTA and scoring a best-in-class value of 0.528 at short-term memorability. 
+
+| Team | Best Short Term | Best Long Term |
+| :-------------: | :-------------: | :-------------: |
+| Insight@DCU ⭐ | 0.528 | 0.27 |
+| MeMAD | 0.522 | 0.277 |
+| Best 2018 | 0.497 | 0.257 |
+| UPB-L25 (*) | 0.477 | 0.232 |
+| RUC | 0.472 | 0.216 |
+| EssexHubTV | 0.467 | 0.203 |
+| TCNJ-CS | 0.445 | 0.218 |
+| HCMUS | 0.445 | 0.208 |
+| GIBIS | 0.438 | 0.199 |
+| Baseline (MemNet) | 0.39 | 0.17 |
+| Average 2018 | 0.359 | 0.173 |
 
 ## Challenge
 
