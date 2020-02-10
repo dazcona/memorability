@@ -2,7 +2,7 @@ import os
 import datetime
 
 # Column to predict
-TARGET_SHORT_NAME = 'long' # 'short' or 'long'
+TARGET_SHORT_NAME = 'short' # 'short' or 'long'
 TARGET = '{}-term_memorability'.format(TARGET_SHORT_NAME)
 # Target columns
 TARGET_COLS = [ 'short-term_memorability', 'nb_short-term_annotations', 'long-term_memorability', 'nb_long-term_annotations' ]

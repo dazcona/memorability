@@ -1,5 +1,4 @@
 # import the necessary packages
-############ , , , 
 from keras.applications import imagenet_utils
 from keras.preprocessing.image import img_to_array
 from keras.preprocessing.image import load_img
