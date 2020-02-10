@@ -7,10 +7,6 @@
 * [Table with Results](https://docs.google.com/spreadsheets/d/1LrenTHNGRZzCHYluYl2YPdmlHuUsTJSMhUIb1X91hdk/edit?usp=drive_web&ouid=100420670696373997922)
 * Ensembles: [short-term table](https://docs.google.com/spreadsheets/d/1ToQoHWf3xvJRG-Imi-mtY7gym1p47M4g4htAkxSxFcU/edit#gid=287676692) & [long-term table](https://docs.google.com/spreadsheets/d/1CxyFeBVttJCmscKNHsOLun7bsxIuxhbrUwYSUoF-DVU/edit#gid=286590362)
 
-<<<<<<< HEAD
-![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fdazcona%2Fmemorability)
-
-=======
 [Paper](https://www.eigen.no/MediaEval_19_paper_15.pdf): Predicting Media Memorability Using Ensemble Models
 
 ![Hits](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fdazcona%2Fmemorability)
@@ -41,7 +37,6 @@ Please consider citing this paper if you use any of the work:
 | Baseline (MemNet) | 0.39 | 0.17 |
 | Average 2018 | 0.359 | 0.173 |
 
->>>>>>> 2048358c4d97604012e0214c2fded8b3149d4154
 ## Challenge
 
 The Memorability challenge is [here](http://www.multimediaeval.org/mediaeval2019/memorability/).
