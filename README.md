@@ -147,11 +147,7 @@ $ make build
 $ make run
 ```
 
-<<<<<<< HEAD
-5. SSH to the docker container:
-=======
 5. CLI to the docker container:
->>>>>>> 2048358c4d97604012e0214c2fded8b3149d4154
 ```
 $ make dev
 ```
@@ -208,12 +204,9 @@ $ python src/viz_activations.py --model ResNet152
 3. **Ensemble Features for the 5 runs each**
 ![](figures/tables/Table_3.png)
 
-<<<<<<< HEAD
-=======
 4. **Telegram chatbot to report results**
 ![](figures/mlbot.jpeg)
 
->>>>>>> 2048358c4d97604012e0214c2fded8b3149d4154
 ## Visualizations
 
 1. **Short-term and long-term Memorability Histograms**
