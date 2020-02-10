@@ -16,3 +16,4 @@ predictions/training/*
 predictions/test/*
 !predictions/training/.gitkeep
 !predictions/test/.gitkeep
+secret.txt

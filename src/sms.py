@@ -1,8 +1,8 @@
 import telebot
 import os
 
-telegram_token = '892268864:AAFmr9RcTbzZG_1IGlxeKtWTk5VsDVmM6ao'
-telegram_chat_id = '624971481'
+telegram_token = 'Token here!'
+telegram_chat_id = 'Chat id here!'
 
 def send(message):
 	bot = telebot.TeleBot(telegram_token)
